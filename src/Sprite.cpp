@@ -16,6 +16,9 @@ namespace BINDU
 		m_height = 1;
 		m_scale = 1;
 		m_rotation = 0;
+		m_doesRotate = false;
+		m_rotationTime = 0;
+		m_rotationDelta = 0;
 		m_translateX = 0;
 		m_translateY = 0;
 		m_center = D2D1::Point2F(0, 0);
@@ -37,10 +40,12 @@ namespace BINDU
 	}
 	Sprite::~Sprite() 
 	{
+		 
 		if (m_animationMap.size() >0) {
 
 			m_animationMap.clear();
 		}
+		
 	}
 
 	
@@ -49,9 +54,6 @@ namespace BINDU
 	{
 		updateTransform();
 
-		if (!m_animated)
-			srcRect = { m_position.x,m_position.y,m_position.x + m_bitmap->GetSize().width,m_position.y + m_bitmap->GetSize().height };
-		else
 			Animate();
 
 		if (m_moveTimer > 0)
@@ -71,15 +73,45 @@ namespace BINDU
 			m_position.y += m_velocity.y * dt;
 		}
 
+		if (m_doesRotate) {
+
+			if (m_rotationTimer.stopwatch(m_rotationTime))
+			{
+				m_rotation += m_rotationDelta;
+
+				if (m_rotation > 360)
+				{
+					m_rotation -= 360;
+				}
+			}
+		}
+
+		if (m_doesScale)
+		{
+			if (m_scaleTimer.stopwatch(m_scaleTime))
+			{
+				m_scale += m_scaleDelta;
+
+				if (m_scale > m_maxScale || m_scale < m_minScale)
+					m_scaleDelta *= -1;
+			}
+
+		}
+
+
 	}
 
 	bool Sprite::LoadFromFile(const wchar_t* filename)
 	{
-		if (!BitmapLoader::LoadFromFile(filename,&m_bitmap))
+
+		if (!BitmapLoader::LoadFromFile(filename,m_bitmap.ReleaseAndGetAddressOf()))
 		{
 			g_engine->sendMessage("Error loading bitmap!", "Error", e_Error::FATAL_ERROR);
 			return false;
 		}
+
+	    m_bitmapSize = m_bitmap->GetSize();
+
 		m_imageLoaded = true;
 		return true;
 	}
@@ -165,8 +197,9 @@ namespace BINDU
 	void Sprite::SetBitmap(ID2D1Bitmap* bitmap)
 	{
 		m_bitmap = bitmap;
-		bitmap->Release();
-		m_bitmap->AddRef();
+
+		m_bitmapSize = m_bitmap->GetSize();
+
 		m_imageLoaded = true;
 	}
 
@@ -192,7 +225,7 @@ namespace BINDU
 
 	void Sprite::Draw(Graphics* graphics)
 	{
-		
+
 		graphics->getRenderTarget()->SetTransform(m_scalingMatrix * m_rotationMatrix * m_translateMatrix);
 	
 		graphics->getRenderTarget()->DrawBitmap(m_bitmap.Get(),
@@ -220,7 +253,7 @@ namespace BINDU
 	{
 		float fx, fy;
 
-		if (m_animTimer.stopwatch(m_timeCount))
+		if (m_animTimer.stopwatch(m_timeCount) && m_animated)
 		{
 			m_currentFrame++;
 			if (m_currentFrame <= 0) m_currentFrame = m_totalFrame;

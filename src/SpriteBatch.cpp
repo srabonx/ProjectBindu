@@ -6,49 +6,99 @@ namespace BINDU
 	{
 		m_spriteBatch = nullptr;
 		m_deviceContxt = nullptr;
-		m_bitmap = nullptr;
-		rect = { 0,0,50,50 };
 	}
 
 	SpriteBatch::~SpriteBatch()
 	{
-		
+
 	}
 
-	HRESULT SpriteBatch::Init()
+	void SpriteBatch::Init()
 	{
 		HRESULT hr = S_OK;
 
-// 		DX::ThrowIfFailed(
-// 
-// 			g_engine->getGraphics()->getD2dDeviceContext()->QueryInterface(m_deviceContxt.ReleaseAndGetAddressOf())
-// 		
-// 		);
+ 		DX::ThrowIfFailed(
+ 
+ 			g_engine->getGraphics()->getD2dDeviceContext()->QueryInterface(m_deviceContxt.ReleaseAndGetAddressOf())
+ 		
+ 		);
 
-// 		DX::ThrowIfFailed(
-// 
-// 			m_deviceContxt->CreateSpriteBatch(m_spriteBatch.ReleaseAndGetAddressOf())
-// 
-// 		);
+ 		DX::ThrowIfFailed(
+ 
+ 			m_deviceContxt->CreateSpriteBatch(m_spriteBatch.ReleaseAndGetAddressOf())
+ 
+ 		);
 
-		DX::ThrowIfFailed(
-			g_engine->getGraphics()->getD2dDeviceContext()->CreateSpriteBatch(m_spriteBatch.ReleaseAndGetAddressOf())
-		);
-		m_spriteBatch->AddSprites(20, &rect, NULL, NULL);
-		return hr;
 	}
-	bool SpriteBatch::LoadFromFile(const wchar_t* filename)
+
+	void SpriteBatch::LoadSpriteSheet(const wchar_t* filename)
 	{
+		LoadFromFile(filename);
+	}
+
+	void SpriteBatch::setSpriteCount(int value)
+	{
+		m_spriteCount = value;
+
+	}
+
+	void SpriteBatch::SetSprite( const D2D1_RECT_F& dstRect, D2D1_RECT_U* srcRect, const BND_COLOR& color, float scale , float rotation, Vec2f velocity)
+	{
+		m_velocities.push_back(velocity);
+
+		D2D1_COLOR_F lcolor{};
+		lcolor.r = ( color.r / 255.f );
+		lcolor.g = ( color.g / 255.f );
+		lcolor.b = ( color.b / 255.f );
+		lcolor.a = ( color.a / 255.f );
+
+		D2D1_POINT_2F center = D2D1::Point2F(dstRect.left + ((dstRect.right - dstRect.left) / 2),
+											 dstRect.top + ((dstRect.bottom - dstRect.top) / 2));
+
+
+
+		D2D1_MATRIX_3X2_F rotationMatrix = D2D1::Matrix3x2F::Rotation(rotation,center);
+		D2D1_MATRIX_3X2_F scaleMatrix = D2D1::Matrix3x2F::Scale(scale, scale,center);
+
 		
-		if (!BitmapLoader::LoadFromFile(filename, &m_bitmap))
-			return false;
+		D2D1_MATRIX_3X2_F transformMatrix = (scaleMatrix * rotationMatrix);
 
-		if (!m_bitmap)
-			return false;
-		return true;
+		m_spriteBatch->AddSprites(1, &dstRect, NULL, &lcolor, &transformMatrix);
+	
 	}
-	void SpriteBatch::DrawSpriteBatch()
+
+	void SpriteBatch::StartSpriteBatch()
 	{
-		g_engine->getGraphics()->getD2dDeviceContext()->DrawSpriteBatch(m_spriteBatch.Get(), m_bitmap.Get());
+
+	}
+
+	void SpriteBatch::Update(float dt)
+	{
+		UINT32 count = m_spriteBatch->GetSpriteCount();
+
+
+		for (UINT32 i = 0; i < count; i++)
+		{
+			D2D1_RECT_F dstRect{};
+			D2D1_RECT_U srcRect{};
+			D2D1_COLOR_F lcolor{};
+			D2D1_MATRIX_3X2_F transfromMatrix{};
+
+			m_spriteBatch->GetSprites(i, 1, &dstRect, &srcRect, &lcolor, &transfromMatrix);
+
+			D2D1_POINT_2F center = D2D1::Point2F(dstRect.left + ((dstRect.right - dstRect.left) / 2),
+					dstRect.top + ((dstRect.bottom - dstRect.top) / 2));
+
+			transfromMatrix = transfromMatrix * D2D1::Matrix3x2F::Translation( m_velocities[i].x * dt, m_velocities[i].y * dt);
+
+			m_spriteBatch->SetSprites(i, 1, &dstRect, &srcRect, &lcolor, &transfromMatrix);
+
+		}
+
+	}
+
+	void SpriteBatch::Draw(Graphics* graphics)
+	{
+		m_deviceContxt->DrawSpriteBatch(m_spriteBatch.Get(), m_bitmap.Get());
 	}
 };// namespace

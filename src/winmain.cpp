@@ -6,10 +6,15 @@
 #include "Include/Bindu.h"
 
 bool CreateMainWindow(HWND& hWnd,HINSTANCE& hInstance,int& nCmdShow);
+
 LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
+
 bool e_gameOver;
+
 BINDU::Engine* g_engine;
+
 // Main Entry point of the program
+
 int WINAPI WinMain(HINSTANCE hInstance,HINSTANCE hPrevInstance,LPSTR lpCmdLine,int nCmdShow) {
 
    /*
@@ -18,22 +23,24 @@ int WINAPI WinMain(HINSTANCE hInstance,HINSTANCE hPrevInstance,LPSTR lpCmdLine,i
 
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 
-	MSG msg;
-	HWND g_hWnd = NULL;
+	MSG		msg;
+	HWND	g_hWnd = NULL;
+
+	CoInitializeEx(NULL, COINIT_MULTITHREADED);							// Initializing the COM library
 
 	g_engine = new BINDU::Engine();
 
 	if (!BINDU::game_preload())
 	{
 		MessageBox(g_hWnd, "Error in game preload!", "Error", MB_OK);
-		return 0;
+		return 1;
 	}
 
 	// Create main window
 	if (!CreateMainWindow(g_hWnd, hInstance, nCmdShow))
 	{
 		MessageBox(g_hWnd, "Error Creating Window!", "Error", MB_OK);
-		return 0;
+		return 1;
 	}
 
 	// Initialize The Engine
@@ -42,7 +49,7 @@ int WINAPI WinMain(HINSTANCE hInstance,HINSTANCE hPrevInstance,LPSTR lpCmdLine,i
 	if (!g_engine->Init())
 	{
 		MessageBox(g_hWnd, "Error initializing the engine!", "Error", MB_OK);
-		return 0;
+		return 1;
 	}
 	BINDU::game_init();
 
@@ -52,18 +59,26 @@ int WINAPI WinMain(HINSTANCE hInstance,HINSTANCE hPrevInstance,LPSTR lpCmdLine,i
 	{
 		if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
 		{
-			if (msg.message == WM_QUIT)
-				e_gameOver = true;
 
 			TranslateMessage(&msg);
 			DispatchMessage(&msg);
+
+			if (msg.message == WM_QUIT)
+			{
+				e_gameOver = true;
+			}
 		}
-		else {
+		else
 			g_engine->Run();
-		}
+
 	}
+
 	BINDU::game_end();
+
 	delete g_engine;
+
+	CoUninitialize();								// Uninitializing the COM library								
+
 	_CrtDumpMemoryLeaks();
 	return 0;
 }
@@ -71,40 +86,40 @@ int WINAPI WinMain(HINSTANCE hInstance,HINSTANCE hPrevInstance,LPSTR lpCmdLine,i
 bool CreateMainWindow(HWND& hWnd,HINSTANCE& hInstance,int& nCmdShow)
 {
 	RECT windowRect;
-	const char* className = "main_window";
-	const char* title = g_engine->getTitle();
-	int width = g_engine->getWindowWidth();
-	int height = g_engine->getWindowHeight();
+	const char* className	 = "main_window";
+	const char* title		 = g_engine->getTitle();
+	int width				 = g_engine->getWindowWidth();
+	int height				 = g_engine->getWindowHeight();
 
 	// Set Window Dimension
-	windowRect.left = (LONG)0;
-	windowRect.right = (LONG)width;
-	windowRect.top = (LONG)0;
-	windowRect.bottom = (LONG)height;
+	windowRect.left			 = (LONG)0;
+	windowRect.right		 = (LONG)width;
+	windowRect.top			 = (LONG)0;
+	windowRect.bottom		 = (LONG)height;
 
 	// Load Icon
-	const char* iconName = g_engine->getAppIcon();
-	HICON hIcon;
+	const char* iconName	 = g_engine->getAppIcon();
+	HICON		hIcon;
 	if (sizeof(iconName) > 0)
-		hIcon = (HICON)LoadImage(GetModuleHandle(0), iconName, IMAGE_ICON, 0, 0, LR_LOADFROMFILE);
+		hIcon				 = (HICON)LoadImage(GetModuleHandle(0), iconName, IMAGE_ICON, 0, 0, LR_LOADFROMFILE);
 	else
-		hIcon = LoadIcon(NULL, IDI_APPLICATION);
+		hIcon				 = LoadIcon(NULL, IDI_APPLICATION);
 
 	// Create Window class structure
 	
-	WNDCLASSEX wcx = { sizeof(WNDCLASSEX) };
-	wcx.cbSize = sizeof(wcx);
-	wcx.style = CS_HREDRAW | CS_VREDRAW;
-	wcx.lpfnWndProc = WndProc;
-	wcx.cbClsExtra = 0;
-	wcx.cbWndExtra = 0;
-	wcx.hInstance = hInstance;
-	wcx.hIcon = hIcon;
-	wcx.hCursor = LoadCursor(NULL, IDC_ARROW);
-	wcx.hbrBackground = NULL;//(HBRUSH)GetStockObject(WHITE_BRUSH);
-	wcx.lpszMenuName = NULL;
-	wcx.lpszClassName = className;
-	wcx.hIconSm = NULL;
+	WNDCLASSEX wcx		= { sizeof(WNDCLASSEX) };
+	wcx.cbSize			= sizeof(wcx);
+	wcx.style			= CS_HREDRAW | CS_VREDRAW;
+	wcx.lpfnWndProc		= WndProc;
+	wcx.cbClsExtra		= 0;
+	wcx.cbWndExtra		= 0;
+	wcx.hInstance		= hInstance;
+	wcx.hIcon			= hIcon;
+	wcx.hCursor			= LoadCursor(NULL, IDC_ARROW);
+	wcx.hbrBackground	= NULL;//(HBRUSH)GetStockObject(WHITE_BRUSH);
+	wcx.lpszMenuName	= NULL;
+	wcx.lpszClassName	= className;
+	wcx.hIconSm			= NULL;
 
 	// Register window class
 	RegisterClassEx(&wcx);
@@ -112,8 +127,8 @@ bool CreateMainWindow(HWND& hWnd,HINSTANCE& hInstance,int& nCmdShow)
 	// Get monitor display size
 	RECT ms;
 	GetWindowRect(GetDesktopWindow(), &ms);
-	LONG x = ((ms.right - ms.left) / 2) - (width / 2);
-	LONG y = ((ms.bottom - ms.top) / 2) - (height / 2);
+	LONG x				= ((ms.right - ms.left) / 2) - (width / 2);
+	LONG y				= ((ms.bottom - ms.top) / 2) - (height / 2);
 
 
 	hWnd = CreateWindowEx(0,
@@ -139,7 +154,9 @@ bool CreateMainWindow(HWND& hWnd,HINSTANCE& hInstance,int& nCmdShow)
 		SWP_NOMOVE);
 
 	ShowWindow(hWnd,nCmdShow);
+
 	UpdateWindow(hWnd);
+	
 	return true;
 }
 

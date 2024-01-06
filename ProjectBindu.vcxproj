@@ -39,6 +39,7 @@
     <ClInclude Include="Include\HelperMethods.h" />
     <ClInclude Include="Include\initConsole.h" />
     <ClInclude Include="Include\Input.h" />
+    <ClInclude Include="Include\ParticleEmitter.h" />
     <ClInclude Include="Include\Sprite.h" />
     <ClInclude Include="Include\SpriteBatch.h" />
     <ClInclude Include="Include\TImer.h" />

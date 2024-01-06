@@ -83,5 +83,8 @@
     <ClInclude Include="Include\SpriteBatch.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Include\ParticleEmitter.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
