@@ -3,21 +3,25 @@
 
 namespace BINDU
 {
-	enum CollisionType
-	{
-		COLLISION_RECT,
-		COLLISION_CIRC,
-		COLLISION_NONE,
-	};
-
-	struct AnimDetails
-	{
-		int index;
-		int framecount;
-	};
 
 	class Sprite :public Entity
 	{
+
+	private:
+
+		enum CollisionType
+		{
+			COLLISION_RECT,
+			COLLISION_CIRC,
+			COLLISION_NONE,
+		};
+
+		struct AnimDetails
+		{
+			int index;
+			int framecount;
+		};
+
 	private:
 
 		bool							   m_imageLoaded;

@@ -26,7 +26,18 @@ namespace BINDU
 
 		void                        SetSprite(const D2D1_RECT_F& dstRect, D2D1_RECT_U* srcRect, const BND_COLOR& color, float scale = 1, float rotation = 0, Vec2f velocity = {0,0});
 
+		void						UpdateSprite(int index,const D2D1_RECT_F* dstRect,const BND_COLOR& newColor, float newScale = 1, float newRotation = 0, Vec2f newVelocity = { 0,0 });
+
+		void						BatchAdd(int count, const D2D1_RECT_F& dstRect);
+
+		inline int					GetSpriteCount() { return m_spriteBatch->GetSpriteCount(); }
+
+		void						Clear();
+
 		void                        StartSpriteBatch();
+		
+		void						DrawSelected(int index);
+
 		virtual void			    Draw(Graphics* graphics) override;
 		
 		virtual void				Update(float dt) override;

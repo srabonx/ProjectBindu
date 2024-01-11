@@ -9,7 +9,7 @@ namespace BINDU {
 
 		DWORD m_time;
 		DWORD m_stopwatch;
-
+		int	  m_interval{ 0 };
 
 	public:
 		Timer(void) 
@@ -17,7 +17,18 @@ namespace BINDU {
 			m_time = GetTickCount();
 			resetStopwatch();
 		}
-	
+
+		Timer(int interval) :m_interval{ interval }
+		{
+			m_time = GetTickCount();
+			resetStopwatch();
+		}
+		
+		inline bool pulse()
+		{
+			return stopwatch(m_interval);
+		}
+
 		inline DWORD getCurrentTime()								// Get time since system started
 		{
 			return GetTickCount();

@@ -67,9 +67,63 @@ namespace BINDU
 	
 	}
 
+	void SpriteBatch::UpdateSprite(int index,const D2D1_RECT_F* dstRect, const BND_COLOR& newColor, float newScale, float newRotation, Vec2f newVelocity)
+	{
+
+		D2D1_COLOR_F lcolor{};
+		lcolor.r = (newColor.r / 255.f);
+		lcolor.g = (newColor.g / 255.f);
+		lcolor.b = (newColor.b / 255.f);
+		lcolor.a = (newColor.a / 255.f);
+
+//		D2D1_RECT_F ldstRect{};
+
+//		m_spriteBatch->GetSprites(index, 1, &ldstRect,nullptr,nullptr,nullptr);
+
+//		D2D1_RECT_F dstRect{};
+
+/*		dstRect.left = newPosition.x;
+		dstRect.top = newPosition.y;
+		dstRect.right = newPosition.x + (ldstRect.right - ldstRect.left);
+		dstRect.bottom = newPosition.y + (ldstRect.bottom - ldstRect.top); */
+
+//		ldstRect = dstRect;
+		D2D1_POINT_2F center = {};
+		if (dstRect)
+			center = D2D1::Point2F(dstRect->left + ((dstRect->right - dstRect->left) / 2),
+				dstRect->top + ((dstRect->bottom - dstRect->top) / 2));
+
+		D2D1_MATRIX_3X2_F rotationMatrix = D2D1::Matrix3x2F::Rotation(newRotation, center);
+		D2D1_MATRIX_3X2_F scaleMatrix = D2D1::Matrix3x2F::Scale(newScale, newScale, center);
+		D2D1_MATRIX_3X2_F translateMatrix = D2D1::Matrix3x2F::Translation(newVelocity.x, newVelocity.y);
+
+		D2D1_MATRIX_3X2_F transfromMatrix = (scaleMatrix * rotationMatrix * translateMatrix);
+
+		m_spriteBatch->SetSprites(index, 1, dstRect, NULL, &lcolor, &transfromMatrix);
+
+	}
+
+	void SpriteBatch::BatchAdd(int count, const D2D1_RECT_F& dstRect)
+	{
+		//D2D1_RECT_F dstRect{};
+
+		m_spriteBatch->AddSprites(count, &dstRect, NULL, NULL, NULL);
+
+	}
+
+	void SpriteBatch::Clear()
+	{
+		m_spriteBatch->Clear();
+	}
+
 	void SpriteBatch::StartSpriteBatch()
 	{
 
+	}
+
+	void SpriteBatch::DrawSelected(int index)
+	{
+		m_deviceContxt->DrawSpriteBatch(m_spriteBatch.Get(), index, 1, m_bitmap.Get());
 	}
 
 	void SpriteBatch::Update(float dt)

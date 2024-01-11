@@ -9,6 +9,10 @@ namespace BINDU {
 	{
 		BND_COLOR() :r{ 0.0f }, g{ 0.0f }, b{ 0.0f }, a{ 0.0f }
 		{}
+		BND_COLOR(const BND_COLOR& color):r{color.r},g{color.g},b{color.b},a{color.a}
+		{}
+		BND_COLOR(float r,float g,float b, float a):r{r},g{g},b{b},a{a}
+		{}
 
 		float r;
 		float g;

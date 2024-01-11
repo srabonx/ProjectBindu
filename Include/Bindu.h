@@ -31,6 +31,8 @@
 
 using namespace Microsoft::WRL;
 
+#include "Range.h"
+#include "Random.h"
 #include "Graphics.h"
 #include "constants.h"
 #include "Game.h"

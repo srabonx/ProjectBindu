@@ -19,6 +19,16 @@ namespace BINDU {
 		inline void setY(T y) { this->y = y; }
 		inline T getY() const { return y; }
 
+		inline float Distance(const Vector2& vec)
+		{
+			return sqrt((vec.x - x) * (vec.x - x) + (vec.y - y) * (vec.y - y));
+		}
+
+		inline float Length()
+		{
+			return sqrt(x * x + y * y);
+		}
+
 		inline Vector2 operator + (const Vector2& rhs)
 		{
 			T nx = x + rhs.x;
