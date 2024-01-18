@@ -21,7 +21,6 @@ namespace BINDU
 		virtual ~Entity() {}
 
 		virtual void Update(float dt) = 0;
-		virtual void Move() = 0;
 		virtual void Animate() = 0;
 		virtual void Draw(Graphics* graphics) = 0;
 

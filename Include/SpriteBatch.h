@@ -4,51 +4,45 @@
 
 namespace BINDU
 {
-	class SpriteBatch : protected Sprite
+	class SpriteBatch : public Drawable
 	{
 	private:
 		ComPtr<ID2D1SpriteBatch>		m_spriteBatch;
-		ComPtr<ID2D1DeviceContext3>		m_deviceContxt;
+		ComPtr<ID2D1DeviceContext3>		m_deviceContext;
 
 		int								m_spriteCount{ 0 };
 
-		std::vector<Vec2f>              m_velocities;
+		float							m_coEff{ 0 };
 
 	protected:
 
 
 	public:
 		SpriteBatch();
-		virtual ~SpriteBatch();
+		~SpriteBatch();
 
 		void 						Init();
+
 		void						LoadSpriteSheet(const wchar_t* filename);
 
-		void                        SetSprite(const D2D1_RECT_F& dstRect, D2D1_RECT_U* srcRect, const BND_COLOR& color, float scale = 1, float rotation = 0, Vec2f velocity = {0,0});
+		void                        AddSprite(const Bnd_Rect_F& dstRect,const Bnd_Rect* srcRect, const BND_COLOR& color, float scale = 1, float rotation = 0);
 
-		void						UpdateSprite(int index,const D2D1_RECT_F* dstRect,const BND_COLOR& newColor, float newScale = 1, float newRotation = 0, Vec2f newVelocity = { 0,0 });
+		void						UpdateSprite(int index,int count, const Bnd_Rect_F* dstRect,const Bnd_Rect* srcRect, const BND_COLOR& newColor, float newScale = 1, float newRotation = 0);
 
-		void						BatchAdd(int count, const D2D1_RECT_F& dstRect);
+		void						BatchAdd(int count, const Bnd_Rect_F& dstRect);
 
-		inline int					GetSpriteCount() { return m_spriteBatch->GetSpriteCount(); }
+		inline int					getSpriteCount() const { return m_spriteBatch->GetSpriteCount(); }
 
-		void						Clear();
-
-		void                        StartSpriteBatch();
-		
-		void						DrawSelected(int index);
+		void						Clear() const;
 
 		virtual void			    Draw(Graphics* graphics) override;
-		
-		virtual void				Update(float dt) override;
+		void						Draw(Graphics* graphics, int index, int count = 1) const;
+
+		void						Update(float dt);
 
 		// Accessor/Mutator functions
 
-		inline ID2D1SpriteBatch*    getSpriteBatch() { return m_spriteBatch.Get(); }
-
-		void						setSpriteCount(int value);
-		inline int					getSpriteCount() { return static_cast<int>(m_spriteBatch->GetSpriteCount()); }
-
+		inline ID2D1SpriteBatch*    getSpriteBatch() const { return m_spriteBatch.Get(); }
 		
 	};
 }// namespace

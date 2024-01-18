@@ -40,10 +40,17 @@ using namespace Microsoft::WRL;
 #include "TImer.h"
 #include "Input.h"
 #include "BitmapLoader.h"
+#include "SceneObject.h"
+#include "Scene.h"
+#include "SceneManager.h"
+#include "Drawable.h"
 #include "Entity.h"
 #include "Sprite.h"
 #include "SpriteBatch.h"
 #include "ParticleEmitter.h"
+#include "Font.h"
+#include "Animator.h"
+
 
 
 #define VERSION_MAJOR 1

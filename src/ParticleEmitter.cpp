@@ -14,7 +14,7 @@ namespace BINDU
 
 	void ParticleEmitter::Init(const ParticleProps& particleProps)
 	{
-		SpriteBatch::Init();
+		m_spriteBatch.Init();
 		m_particleProps = particleProps;
 	}
 
@@ -43,20 +43,19 @@ namespace BINDU
 
 				if (!m_particlePool[i].isAlive)
 				{
-//					SpriteBatch::UpdateSprite(i, NULL, m_particlePool[i].startColor, m_particlePool[i].startScale, m_particlePool[i].rotation, m_particlePool[i].velocity);
 					continue;
 				}
 				currentAlive++;
 
 				m_particlePool[i].Update(dt);
 
-				D2D1_RECT_F dstRect{};
-				dstRect.left = m_particlePool[i].position.x;
-				dstRect.top = m_particlePool[i].position.y;
-				dstRect.right = m_particlePool[i].position.x + m_particlePool[i].size.x;
-				dstRect.bottom = m_particlePool[i].position.y + m_particlePool[i].size.y;
+				//D2D1_RECT_F dstRect{};
+				//dstRect.left = m_particlePool[i].position.x;
+				//dstRect.top = m_particlePool[i].position.y;
+				//dstRect.right = m_particlePool[i].position.x + m_particlePool[i].size.x;
+				//dstRect.bottom = m_particlePool[i].position.y + m_particlePool[i].size.y;
 
-				SpriteBatch::UpdateSprite(i, &dstRect, m_particlePool[i].startColor, m_particlePool[i].startScale, m_particlePool[i].rotation, m_particlePool[i].velocity);
+				m_spriteBatch.UpdateSprite(i,1,&m_particlePool[i].dstRect,nullptr, m_particlePool[i].startColor, m_particlePool[i].startScale, m_particlePool[i].rotation);
 				
 			}
 		}
@@ -74,7 +73,7 @@ namespace BINDU
 				else
 					continue;
 			} */
-			SpriteBatch::Draw(graphics);
+			m_spriteBatch.Draw(graphics);
 		}
 	}
 
@@ -90,15 +89,15 @@ namespace BINDU
 
 		if (m_particleProps.colorRandomnessRange.min > 0 || m_particleProps.colorRandomnessRange.max > 0)
 		{
-			startColor.r = RandomNumber::Get(m_particleProps.colorRandomnessRange.min, m_particleProps.colorRandomnessRange.max);
-			startColor.g = RandomNumber::Get(m_particleProps.colorRandomnessRange.min, m_particleProps.colorRandomnessRange.max);
-			startColor.b = RandomNumber::Get(m_particleProps.colorRandomnessRange.min, m_particleProps.colorRandomnessRange.max);
-			startColor.a = RandomNumber::Get(m_particleProps.colorOpacityRange.min, m_particleProps.colorOpacityRange.max);
+			startColor.r = static_cast<float>(RandomNumber::Get(m_particleProps.colorRandomnessRange.min, m_particleProps.colorRandomnessRange.max));
+			startColor.g = static_cast<float>(RandomNumber::Get(m_particleProps.colorRandomnessRange.min, m_particleProps.colorRandomnessRange.max));
+			startColor.b = static_cast<float>(RandomNumber::Get(m_particleProps.colorRandomnessRange.min, m_particleProps.colorRandomnessRange.max));
+			startColor.a = static_cast<float>(RandomNumber::Get(m_particleProps.colorOpacityRange.min, m_particleProps.colorOpacityRange.max));
 
-			endColor.r = RandomNumber::Get(m_particleProps.colorRandomnessRange.min, m_particleProps.colorRandomnessRange.max);
-			endColor.g = RandomNumber::Get(m_particleProps.colorRandomnessRange.min, m_particleProps.colorRandomnessRange.max);
-			endColor.b = RandomNumber::Get(m_particleProps.colorRandomnessRange.min, m_particleProps.colorRandomnessRange.max);
-			endColor.a = RandomNumber::Get(m_particleProps.colorOpacityRange.min, m_particleProps.colorOpacityRange.max);
+			endColor.r = static_cast<float>(RandomNumber::Get(m_particleProps.colorRandomnessRange.min, m_particleProps.colorRandomnessRange.max));
+			endColor.g = static_cast<float>(RandomNumber::Get(m_particleProps.colorRandomnessRange.min, m_particleProps.colorRandomnessRange.max));
+			endColor.b = static_cast<float>(RandomNumber::Get(m_particleProps.colorRandomnessRange.min, m_particleProps.colorRandomnessRange.max));
+			endColor.a = static_cast<float>(RandomNumber::Get(m_particleProps.colorOpacityRange.min, m_particleProps.colorOpacityRange.max));
 		}
 		else
 		{
@@ -114,15 +113,18 @@ namespace BINDU
 
 			if (m_particleProps.colorOpacityRange.min > 0 || m_particleProps.colorOpacityRange.max > 0)
 			{
-				startColor.a = RandomNumber::Get(m_particleProps.colorOpacityRange.min, m_particleProps.colorOpacityRange.max);
-				endColor.a = RandomNumber::Get(m_particleProps.colorOpacityRange.min, m_particleProps.colorOpacityRange.max);
+				startColor.a = static_cast<float>(RandomNumber::Get(m_particleProps.colorOpacityRange.min, m_particleProps.colorOpacityRange.max));
+				endColor.a = static_cast<float>(RandomNumber::Get(m_particleProps.colorOpacityRange.min, m_particleProps.colorOpacityRange.max));
 
 			}
 		}
 
 
-		particle.position = m_position;
-		particle.size = m_particleProps.size;
+		particle.dstRect.x = m_position.x;
+		particle.dstRect.y = m_position.y;
+		particle.dstRect.w = m_particleProps.size.x;
+		particle.dstRect.h = m_particleProps.size.y;
+
 		particle.velocity = m_particleProps.velocity;
 		particle.lifeTime = (m_particleProps.lifeTime+RandomNumber::Get(0,3)) ;
 		particle.lifeRemaining = particle.lifeTime;
@@ -132,16 +134,16 @@ namespace BINDU
 		particle.startScale = m_particleProps.startScale;
 		particle.endScale = m_particleProps.endScale;
 		particle.rotation = m_particleProps.rotation;
-		particle.rotationRate = m_particleProps.rotationRate + (RandomNumber::Get(0,20));
+		particle.rotationRate = m_particleProps.rotationRate * (RandomNumber::Get(0,2));
 		particle.isAlive = true;
 		particle.fadeOut = m_particleProps.fadeOut;
 
 
-		D2D1_RECT_F dstRect{};
-		dstRect.left = m_position.x;
-		dstRect.top = m_position.y;
-		dstRect.right = m_position.x + particle.size.x;
-		dstRect.bottom = m_position.y + particle.size.y;
+		//D2D1_RECT_F dstRect{};
+		//dstRect.left = m_position.x;
+		//dstRect.top = m_position.y;
+		//dstRect.right = m_position.x + particle.size.x;
+		//dstRect.bottom = m_position.y + particle.size.y;
 
 		// Set linear velocity
 		float vx = static_cast<float> (cos(RandomNumber::Get(m_sprayDirection, m_sprayDirection + m_spread) * PI_OV_180));
@@ -149,10 +151,10 @@ namespace BINDU
 
 		particle.velocity = { vx * particle.velocity.x + RandomNumber::Get(0,5),vy * particle.velocity.y + RandomNumber::Get(0,5) };
 
-		UpdateSprite(m_index, &dstRect , particle.startColor, particle.startScale, particle.rotation, particle.velocity);
+		m_spriteBatch.UpdateSprite(m_index,1,&particle.dstRect , nullptr,particle.startColor, particle.startScale, particle.rotation);
 
 		
-		// Book keeping
+		// Book-keeping
 
 		m_index = --m_index % m_particlePool.size();
 
@@ -173,7 +175,7 @@ namespace BINDU
 
 	void ParticleEmitter::LoadParticleSprite(const wchar_t* filename)
 	{
-		LoadFromFile(filename);
+		m_spriteBatch.LoadSpriteSheet(filename);
 	}
 
 	void ParticleEmitter::Generate()
@@ -188,18 +190,12 @@ namespace BINDU
 		m_particlePool.resize(value);
 		m_index = value - 1;
 
-		D2D1_RECT_F dstRect{};
-
-		dstRect.left = m_position.x;
-		dstRect.top = m_position.y;
-		dstRect.right = m_position.x + m_particleProps.size.x;
-		dstRect.bottom = m_position.y + m_particleProps.size.y;
 
 		for (int i = 0; i < value; i++)
 		{
 			BND_COLOR color{};
 
-			SetSprite(dstRect, NULL, color, 1, 0, { 0,0 });
+			m_spriteBatch.AddSprite({}, nullptr, color, 1, 0);
 		}
 	}
 
@@ -212,9 +208,9 @@ namespace BINDU
 				startColor.a = 0.f;
 			}
 
-			position.x += velocity.x * dt;
-			position.y += velocity.y * dt;
-
+			dstRect.x += velocity.x * dt;
+			dstRect.y += velocity.y * dt;
+			
 			rotation += rotationRate * dt;
 
 			if (rotation > 360.f)
@@ -248,10 +244,6 @@ namespace BINDU
 
 	}
 
-	void ParticleEmitter::Particle::Reset()
-	{
-
-	}
 
 
 };

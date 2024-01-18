@@ -1,8 +1,9 @@
 #include <Bindu.h>
 //#include <HelperMethods.h>
-
+#include <dwrite.h>
 #include <vector>
 #include "Player.h"
+#include <initConsole.h>
 
 using namespace BINDU;
 #define MAX_OBJ 5
@@ -21,12 +22,17 @@ private:
 	ParticleEmitter emitter2;
 	SpriteBatch m_spriteBatch;
 	float m_posX{ 0 }, m_posY{ 0 };
+
+	SceneManager m_sceneManager;
+	Scene m_scene;
+
+	Font m_font;
+
 public:
 	MainGame()
 	{
 		processorMax = false;
 		m_sprite = nullptr;
-
 	}
 
 	~MainGame()
@@ -78,21 +84,22 @@ public:
 
 	bool Init()
 	{
+		InitConsole();
 		ParticleProps props{};
 
 		props.size = { 16.f,16.f };
 		props.velocity = { 40.f,40.f };
 		props.startScale = 0.5f;
-		props.endScale = 0.f;
-		props.startColor = { 200,220,255,20 };
+		props.endScale = 2.f;
+		props.startColor = { 255,215,0,20 };
 		props.endColor = { 255,0,0,10 };
 		props.colorRandomnessRange = iRange(0, 255);
-		props.colorOpacityRange = iRange(0, 255);
+		props.colorOpacityRange = iRange(0,255 );
 		props.minTimetoChangeColor = 0.f;
 		props.fadeOut = true;
 		props.rotation = 0;
 		props.rotationRate = 20;
-		props.lifeTime = 5.f;
+		props.lifeTime = 16.f;
 
 		m_emitter.Init(props);
 		m_emitter.LoadParticleSprite(L"Resource/particle16.png");
@@ -100,15 +107,15 @@ public:
 		m_emitter.setDirection(0);
 		m_emitter.setSpread(360);
 		m_emitter.setEmissionInterval(0);
-		m_emitter.setEmissionRate(5);
-		m_emitter.setMax(1000);
+		m_emitter.setEmissionRate(30);
+		m_emitter.setMax(20000);
 		m_emitter.onLoop(false);
 
 		props.size = { 16.f,16.f };
 		props.velocity = { 60.f,60.f };
 		props.startScale = 5.f;
 		props.endScale = 10.f;
-		props.startColor = { 220,250,255,20 };
+		props.startColor = { 255,215,0,20 };
 		props.endColor = { 250,0,0,200 };
 		props.colorRandomnessRange = iRange(0, 0);
 		props.colorOpacityRange = iRange(10, 20);
@@ -116,16 +123,17 @@ public:
 		props.fadeOut = true;
 		props.rotation = 0;
 		props.rotationRate = 20;
-		props.lifeTime = 6.f;
+		props.lifeTime = 14.f;
 
 		emitter2.Init(props);
 		emitter2.LoadParticleSprite(L"Resource/smoke.png");
-		emitter2.setPosition({ 600.f,400.f });
+		emitter2.setPosition({ 600.f,800.f });
+		emitter2.setSize({ 50.f,50.f });
 		emitter2.setDirection(240);
-		emitter2.setSpread(60);
+		emitter2.setSpread(70);
 		emitter2.setEmissionInterval(20);
-		emitter2.setEmissionRate(3);
-		emitter2.setMax(1000);
+		emitter2.setEmissionRate(6);
+		emitter2.setMax(3000);
 		emitter2.onLoop(true);
 
 
@@ -142,9 +150,7 @@ public:
 			m_sprite->SetBitmap(bitmap.Get());
 			m_sprite->setPosition(rand()%1280, rand()%800);
 			m_sprite->setSize(60, 60);
-			m_sprite->setTotalFrame(64);
-			m_sprite->setTotalColumn(8);
-			m_sprite->setCurrentFrame(rand()%64);
+
 			m_sprite->setRotation(rand()% 7);
 			m_sprite->setRotationTimer(rand()%20);
 			m_sprite->doesRotate(true);
@@ -152,10 +158,7 @@ public:
 			m_sprite->setScaleTimer(20);
 			m_sprite->setScaleRatio( 1, 1+ rand()% 5);
 			m_sprite->doesScale(true);
-			m_sprite->setAnimationFrameWidth(60);
-			m_sprite->setAnimationFrameHeight(60);
-			m_sprite->setAnimationTimer(100);
-     		m_sprite->setAnimated(true);
+
 			m_vec.push_back(m_sprite);
 		}
 		
@@ -163,26 +166,17 @@ public:
 
  		m_player.Init();
 
-		m_spriteBatch.Init();
-		m_spriteBatch.LoadSpriteSheet(L"Resource/particle16.png");
-		m_spriteBatch.setSpriteCount(5);
-		D2D1_RECT_F dstRect{};
-		for (int i = 0; i < 1000; i++) {
+		m_player.setActive(true);
+		m_scene.AddObject(&m_player);
+		m_scene.setActive(true);
 
-			float x = rand() % 50;
-			float y = rand() % 50;
+		m_sceneManager.AddScene(m_scene);
 
-			dstRect = { x,y,x + 16,y + 16 };
-			BND_COLOR color{};
-			color.r = RandomNumber::Get(250, 255);
-			color.g = RandomNumber::Get(250, 255);
-			color.b = RandomNumber::Get(250, 255);
-			color.a = RandomNumber::Get(1, 20);
+		m_font.Init();
 
+		m_font.LoadBitmapFont(L"Resource/unispace-bitmapfont.png");
+		m_font.setCharSize(9, 20);
 
-			m_spriteBatch.SetSprite( dstRect, NULL, color, 4, rand() % 20,{(float)(rand()%200),(float)(rand() % 10)});
-
-		}
 		return true;
 	}
 
@@ -199,8 +193,18 @@ public:
 			m_emitter.Generate();
 		}
 
-		if (Input::isMouseButtonPressed(BND_BTN_RIGHT))
-			emitter2.setPosition({ (float)Input::getMousePosition().x,(float)Input::getMousePosition().y });
+		if (Input::isMouseButtonHold(BND_BTN_RIGHT))
+		{
+			//	emitter2.setPosition({ (float)Input::getMousePosition().x,(float)Input::getMousePosition().y });
+
+			Vec2f mousePos = { static_cast<float>(Input::getMousePosition().x),static_cast<float>(Input::getMousePosition().y) };
+			Vec2f emitterPos = emitter2.getPosition();
+
+			float angle = mousePos.Angle(emitterPos);
+
+			emitter2.setDirection(angle);
+			std::cout << angle << std::endl;
+		}
 
 		if (Input::isKeyPressed(BND_L))
 			m_emitter.onLoop(true);
@@ -210,8 +214,8 @@ public:
 		m_emitter.Update(dt);
 		emitter2.Update(dt);
 		//m_emitter.setDirection(m_posX++);
- 		m_player.Update(dt);
-
+ 		//m_player.Update(dt);
+		m_sceneManager.Update(dt);
 // 		for (auto& m : m_vec)
 // 		{
 // 			m->Update(dt);
@@ -239,6 +243,13 @@ public:
 
 		m_emitter.Draw(graphics);
 		emitter2.Draw(graphics);
+
+
+		m_font.PrintText(20, 10, "Real: " + std::to_string(g_engine->getRealFrameRate()), { 255,255,255,255 },1);
+		m_font.PrintText(20, 30, "Core: " + std::to_string(g_engine->getCoreFrameRate()), { 255,255,255,255 }, 1);
+
+		m_font.PrintText(500, 300, "This is working", {255,255,255,255}, 1);
+
 	}
 };
 

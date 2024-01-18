@@ -69,7 +69,7 @@ namespace BINDU {
 			m_frameCountCore = 0;
 		}
 
-		SetWindowText(m_hWnd, ("FrameRate core: " + std::to_string(m_frameRateCore) + " , FrameRate real: " + std::to_string(m_frameRateReal)).c_str());
+		//SetWindowText(m_hWnd, ("FrameRate core: " + std::to_string(m_frameRateCore) + " , FrameRate real: " + std::to_string(m_frameRateReal)).c_str());
 
 		if (!o_updateTimer.stopwatch(14))
 		{

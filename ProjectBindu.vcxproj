@@ -19,22 +19,32 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Animator.cpp" />
     <ClCompile Include="src\Bindu.cpp" />
     <ClCompile Include="src\BitmapLoader.cpp" />
+    <ClCompile Include="src\Drawable.cpp" />
     <ClCompile Include="src\Entity.cpp" />
+    <ClCompile Include="src\Font.cpp" />
     <ClCompile Include="src\Game.cpp" />
     <ClCompile Include="src\Graphics.cpp" />
     <ClCompile Include="src\Input.cpp" />
     <ClCompile Include="src\ParticleEmitter.cpp" />
+    <ClCompile Include="src\Scene.cpp" />
+    <ClCompile Include="src\SceneManager.cpp" />
+    <ClCompile Include="src\SceneObject.cpp" />
     <ClCompile Include="src\SpriteBatch.cpp" />
     <ClCompile Include="src\Sprite.cpp" />
     <ClCompile Include="src\winmain.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Include\Animator.h" />
     <ClInclude Include="Include\Bindu.h" />
     <ClInclude Include="Include\BitmapLoader.h" />
+    <ClInclude Include="Include\BND_Helper.h" />
     <ClInclude Include="Include\constants.h" />
+    <ClInclude Include="Include\Drawable.h" />
     <ClInclude Include="Include\Entity.h" />
+    <ClInclude Include="Include\Font.h" />
     <ClInclude Include="Include\Game.h" />
     <ClInclude Include="Include\Graphics.h" />
     <ClInclude Include="Include\HelperMethods.h" />
@@ -43,6 +53,9 @@
     <ClInclude Include="Include\ParticleEmitter.h" />
     <ClInclude Include="Include\Random.h" />
     <ClInclude Include="Include\Range.h" />
+    <ClInclude Include="Include\Scene.h" />
+    <ClInclude Include="Include\SceneManager.h" />
+    <ClInclude Include="Include\SceneObject.h" />
     <ClInclude Include="Include\Sprite.h" />
     <ClInclude Include="Include\SpriteBatch.h" />
     <ClInclude Include="Include\TImer.h" />
@@ -108,9 +121,13 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <IncludePath>C:\DirectXTK\Inc;$(ProjectDir);$(IncludePath)</IncludePath>
+    <TargetName>Bindu</TargetName>
+    <OutDir>$(ProjectDir)lib\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <IncludePath>C:\DirectXTK\Inc;$(ProjectDir);$(IncludePath)</IncludePath>
+    <TargetName>Bindu</TargetName>
+    <OutDir>$(ProjectDir)lib\</OutDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>

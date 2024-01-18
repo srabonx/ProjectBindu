@@ -24,7 +24,7 @@ namespace BINDU
 
 		iRange		colorOpacityRange{ 0,0 };
 
-		int			minTimetoChangeColor{ 0 };								// in seconds
+		float			minTimetoChangeColor{ 0 };								// in seconds
 
 		bool		fadeOut{ false };
 
@@ -32,7 +32,7 @@ namespace BINDU
 		
 	};
 
-	class ParticleEmitter : protected SpriteBatch
+	class ParticleEmitter : public Drawable
 	{
 
 	private:
@@ -40,8 +40,7 @@ namespace BINDU
 		struct Particle
 		{
 		public:
-			Vec2f		position{};
-			Vec2f		size{};
+			Bnd_Rect_F	dstRect{};
 			Vec2f		velocity{};
 
 			float		startScale{};
@@ -62,8 +61,6 @@ namespace BINDU
 			bool		isAlive{ false };
 
 			void		Update(float dt);
-
-			void		Reset();
 
 		};
 
@@ -89,6 +86,8 @@ namespace BINDU
 
 		ParticleProps				m_particleProps{};
 
+		SpriteBatch					m_spriteBatch;
+
 	private:
 
 		void			Add();
@@ -99,7 +98,7 @@ namespace BINDU
 
 		void			Init(const ParticleProps& particleProps);
 
-		virtual void	Update(float dt) override;
+		virtual void	Update(float dt);
 		virtual void	Draw(Graphics* graphics) override;
 
 		void			LoadParticleSprite(const wchar_t* filename);
@@ -108,10 +107,6 @@ namespace BINDU
 
 		inline void		setEmissionInterval(int ms) { m_emissionInterval = ms; }
 		inline void		setEmissionRate(int count) { m_emissionRate = count; }
-
-		inline void		setPosition(const Vec2f& position) { m_position = position; }
-
-		inline void		setSize(float width, float height) { m_width = width; m_height = height; }
 
 		void			setMax(int value);
 		inline void		setDirection(int degree) { m_sprayDirection = degree; }

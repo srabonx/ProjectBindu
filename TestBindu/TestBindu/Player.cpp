@@ -3,7 +3,7 @@
 Player::Player()
 {
 	moves = NONE;
-	m_sprite.setCurrentRow(IDLE);
+	m_animator.setCurrentRow(IDLE);
 }
 
 Player::~Player()
@@ -13,44 +13,53 @@ Player::~Player()
 
 void Player::Init()
 {
-	m_sprite.LoadFromFile(L"Resource/fire-warrior2.png");
-	m_sprite.LoadAnimationFile("Resource/fire-warrior-animation.txt");
-	m_sprite.setPosition(20, 20);
+	m_position = { 100,100 };
+	m_sprite.LoadSpriteFromFile(L"Resource/fire-warrior2.png");
+	m_animator.LoadAnimationFile("Resource/fire-warrior-animation.txt");
+	m_sprite.setPosition(m_position);
 	m_sprite.setSize(144, 80);
-	m_sprite.setVelocity(20,20);
-	m_sprite.setAnimationTimer(100);
-	m_sprite.setAnimated(true);
+	m_velocity = { 60.f,60.f };
+	m_animator.setFrameTime(100);
 }
 
 void Player::Update(float dt)
 {
-	m_sprite.Update(dt);
+//	m_sprite.Update(dt);
+	m_animator.Animate(m_srcRect);
+	m_sprite.setY(m_position.y);
+	
 	switch (moves)
 	{
 	case LEFT:
-		m_sprite.setVelocityX(-40);
-		m_sprite.setAnimation("dashing");
+		m_position.x -= m_velocity.x * dt;
+		m_sprite.setScale(-1, 1);
+		m_sprite.setX(m_position.x-30);
+		m_animator.setAnimation("running");
 		break;
 	case RIGHT:
-		m_sprite.setVelocityX(40);
-		m_sprite.setAnimation("running");
+		m_position.x += m_velocity.x * dt;
+		m_sprite.setScale(1, 1);
+		m_sprite.setX(m_position.x);
+		m_animator.setAnimation("running");
 		break;
 	case UP:
-		m_sprite.setVelocityY(-40);
-		m_sprite.setAnimation("walking");
+		m_position.y -= m_velocity.y * dt;
+		m_animator.setAnimation("walking");
 		break;
 	case DOWN:
-		m_sprite.setVelocityY(40);
+		m_position.y += m_velocity.y * dt;
+		m_animator.setAnimation("walking");
 		break;
 	case ATTACKING:
-		m_sprite.setAnimation("fire_breath");
+		m_animator.setAnimation("fire_breath");
 		break;
 	case NONE:
 	default:
-		m_sprite.setVelocity(0, 0);
-			m_sprite.setAnimation("idle");
+		//m_velocity = { 0,0 };
+		m_animator.setAnimation("idle");
 		break;
 	}
+	
 }
 
 void Player::Move()
@@ -59,12 +68,13 @@ void Player::Move()
 
 void Player::Animate()
 {
-	m_sprite.Animate();
+	
 }
 
 void Player::Draw(BINDU::Graphics* graphics)
 {
-	m_sprite.Draw(graphics);
+	graphics->getRenderTarget()->DrawRectangle({ m_position.x,m_position.y,m_position.x + 144,m_position.y + 80 }, graphics->getSolidColorBrush());
+	m_sprite.Draw(m_srcRect,graphics);
 }
 
 void Player::ProcessInput()

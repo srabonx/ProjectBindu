@@ -26,16 +26,20 @@ enum Animations
 
 };
 
-class Player:public BINDU::Entity
+class Player:public BINDU::SceneObject
 {
 private:
 	BINDU::Sprite m_sprite;
+	BINDU::Animator m_animator;
 	MoveSet moves;
+	BINDU::Vec2f m_position{};
+	BINDU::Vec2f m_velocity{};
+	BINDU::Bnd_Rect_F m_srcRect{};
 public:
 	Player();
 	~Player();
 	void Init();
-	virtual void Update(float dt);
+	virtual void Update(float dt) override;
 	virtual void Move();
 	virtual void Animate();
 	virtual void Draw(BINDU::Graphics* graphics);

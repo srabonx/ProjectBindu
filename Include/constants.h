@@ -2,6 +2,8 @@
 #include <exception>
 
 
+constexpr float PI = 3.14159265f;
+
 // Safely release pointers
 #define SafeRelease(ptr){if(ptr!=NULL)(ptr)->Release();ptr=NULL;}
 
@@ -55,4 +57,6 @@ inline void SetDebugObjectName(_In_ ID3D11DeviceChild* resource, _In_z_ const ch
 	UNREFERENCED_PARAMETER(name);
 #endif
 }
+
+
 
