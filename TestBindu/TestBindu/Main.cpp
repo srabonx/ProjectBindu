@@ -13,10 +13,12 @@ class MainGame
 {
 private:
 	bool processorMax;
-	Player m_player;
+	std::unique_ptr<Player> m_player;
+	std::unique_ptr<Player> player2;
+
 	ComPtr<ID2D1Bitmap> bitmap;
 	ID2D1Bitmap* bitmap2;
-	Sprite* m_sprite;
+	std::unique_ptr<Sprite> m_sprite;
 	std::vector<Sprite*> m_vec;
 	ParticleEmitter m_emitter;
 	ParticleEmitter emitter2;
@@ -24,7 +26,9 @@ private:
 	float m_posX{ 0 }, m_posY{ 0 };
 
 	SceneManager m_sceneManager;
-	Scene m_scene;
+	std::unique_ptr<Layer> backgroundLayer;
+	std::unique_ptr<Layer> foregroundLayer;
+	std::unique_ptr<Scene> m_scene;
 
 	Font m_font;
 
@@ -38,7 +42,6 @@ public:
 	~MainGame()
 	{
 
-		bitmap2->Release();
  		if (m_vec.size() > 0)
  		{
 			std::vector<Sprite*>::iterator itr;
@@ -57,9 +60,7 @@ public:
 			}
 			m_vec.clear();
 		}
- 		
-		if (!m_sprite)
-			delete m_sprite;
+
 	}
 
 	bool Preload()
@@ -117,7 +118,7 @@ public:
 		props.endScale = 10.f;
 		props.startColor = { 255,215,0,20 };
 		props.endColor = { 250,0,0,200 };
-		props.colorRandomnessRange = iRange(0, 0);
+		props.colorRandomnessRange = iRange(245, 255);
 		props.colorOpacityRange = iRange(10, 20);
 		props.minTimetoChangeColor = 0.f;
 		props.fadeOut = true;
@@ -127,7 +128,7 @@ public:
 
 		emitter2.Init(props);
 		emitter2.LoadParticleSprite(L"Resource/smoke.png");
-		emitter2.setPosition({ 600.f,800.f });
+		emitter2.setPosition({ 600.f,600.f });
 		emitter2.setSize({ 50.f,50.f });
 		emitter2.setDirection(240);
 		emitter2.setSpread(70);
@@ -137,41 +138,48 @@ public:
 		emitter2.onLoop(true);
 
 
+		m_sprite = std::make_unique<Sprite>();
+
+		m_sprite->LoadSpriteFromFile(L"Resource/ointyArt.png");
+
+		m_sprite->setPosition(0, 0);
+		m_sprite->setSize(1280, 800);
+		m_sprite->setActive(true);
+
 		
-		BitmapLoader::LoadFromFile(L"Resource/asteroid.png", bitmap.ReleaseAndGetAddressOf());
-
-		for (int i = 0; i < 100; i++) {
-			BitmapLoader::LoadFromFile(L"Resource/Bindu.png", &bitmap2);
-		}
-		
- 		for (int i = 1; i <= MAX_OBJ; i++)
-		{
-			m_sprite = new Sprite();
-			m_sprite->SetBitmap(bitmap.Get());
-			m_sprite->setPosition(rand()%1280, rand()%800);
-			m_sprite->setSize(60, 60);
-
-			m_sprite->setRotation(rand()% 7);
-			m_sprite->setRotationTimer(rand()%20);
-			m_sprite->doesRotate(true);
-			m_sprite->setScaleDelta(0.03f);
-			m_sprite->setScaleTimer(20);
-			m_sprite->setScaleRatio( 1, 1+ rand()% 5);
-			m_sprite->doesScale(true);
-
-			m_vec.push_back(m_sprite);
-		}
 		
 
+		m_player = std::make_unique<Player>();
+		player2 = std::make_unique<Player>();
+		m_scene = std::make_unique<Scene>();
 
- 		m_player.Init();
+		backgroundLayer = std::make_unique<Layer>();
+		foregroundLayer = std::make_unique<Layer>();
 
-		m_player.setActive(true);
-		m_scene.AddObject(&m_player);
-		m_scene.setActive(true);
+ 		m_player->Init();
+		m_player->setPosition(200, 100);
+		m_player->setRotation(0);
+		m_player->setActive(true);
 
-		m_sceneManager.AddScene(m_scene);
+		player2->Init();
+		player2->setPosition(100, 100);
+		player2->setTranslation({ 0,0 });
+		player2->setRotation(0);
+		player2->setActive(true);
+		
+		m_player->AddChild(std::move(player2),"player2");
 
+		backgroundLayer->AddObject(std::move(m_sprite), "bgimage");
+		backgroundLayer->setActive(true);
+		foregroundLayer->AddObject(std::move(m_player),"mainPlayer");
+		foregroundLayer->setActive(true);
+
+		m_scene->AddLayer(std::move(backgroundLayer), "backgroundLayer");
+		m_scene->AddLayer(std::move(foregroundLayer), "foregroundLayer");
+		m_scene->setActive(true);
+
+		m_sceneManager.AddScene(std::move(m_scene),"firstScene");
+		
 		m_font.Init();
 
 		m_font.LoadBitmapFont(L"Resource/unispace-bitmapfont.png");
@@ -206,6 +214,11 @@ public:
 			std::cout << angle << std::endl;
 		}
 
+		if (Input::isKeyPressed(BND_T))
+			m_sceneManager.getScene("firstScene")->RemoveLayer("backgroundLayer");
+		if (Input::isKeyPressed(BND_O))
+			m_sceneManager.getScene("firstScene")->getLayer("foregroundLayer")->getObject("mainPlayer")->RemoveChild("player2");
+
 		if (Input::isKeyPressed(BND_L))
 			m_emitter.onLoop(true);
 		if (Input::isKeyPressed(BND_P))
@@ -213,27 +226,24 @@ public:
 
 		m_emitter.Update(dt);
 		emitter2.Update(dt);
-		//m_emitter.setDirection(m_posX++);
- 		//m_player.Update(dt);
-		m_sceneManager.Update(dt);
-// 		for (auto& m : m_vec)
-// 		{
-// 			m->Update(dt);
-// 		}
 
-//		m_spriteBatch.Update(dt);
+		m_sceneManager.Update(dt);
+
 		
 	}
 
 	void ProcessInput()
 	{
-		m_player.ProcessInput();
+		m_sceneManager.ProcessInput();
+		
 	}
 
 	void Render(Graphics* graphics)
 	{
 		graphics->getRenderTarget()->Clear(D2D1::ColorF(D2D1::ColorF::Black));
- 		m_player.Draw(graphics);
+
+
+		m_sceneManager.Draw(graphics);
 //		m_spriteBatch.Draw(graphics);
 
  //		for (auto& m : m_vec)
@@ -248,7 +258,7 @@ public:
 		m_font.PrintText(20, 10, "Real: " + std::to_string(g_engine->getRealFrameRate()), { 255,255,255,255 },1);
 		m_font.PrintText(20, 30, "Core: " + std::to_string(g_engine->getCoreFrameRate()), { 255,255,255,255 }, 1);
 
-		m_font.PrintText(500, 300, "This is working", {255,255,255,255}, 1);
+		m_font.PrintText(500, 300, "ABCDabcd", {255,255,255,255}, 1);
 
 	}
 };

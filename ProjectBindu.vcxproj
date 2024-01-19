@@ -28,6 +28,7 @@
     <ClCompile Include="src\Game.cpp" />
     <ClCompile Include="src\Graphics.cpp" />
     <ClCompile Include="src\Input.cpp" />
+    <ClCompile Include="src\Layer.cpp" />
     <ClCompile Include="src\ParticleEmitter.cpp" />
     <ClCompile Include="src\Scene.cpp" />
     <ClCompile Include="src\SceneManager.cpp" />
@@ -50,6 +51,7 @@
     <ClInclude Include="Include\HelperMethods.h" />
     <ClInclude Include="Include\initConsole.h" />
     <ClInclude Include="Include\Input.h" />
+    <ClInclude Include="Include\Layer.h" />
     <ClInclude Include="Include\ParticleEmitter.h" />
     <ClInclude Include="Include\Random.h" />
     <ClInclude Include="Include\Range.h" />

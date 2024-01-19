@@ -3,21 +3,74 @@
 
 namespace BINDU
 {
-	void Scene::Update(float dt)
+	void Scene::Update(float dt) const
 	{
-		std::vector<SceneObject*>::iterator itr;
-
-		for (itr = m_objects.begin(); itr != m_objects.end(); itr++)
+		for(const auto& m: m_layers)
 		{
-			if ((*itr)->isActive())
-			{
-				(*itr)->Update(dt);
-			}
+			if (m->isActive())
+				m->Update(dt);
 		}
 	}
 
-	void Scene::AddObject(SceneObject* sceneObject)
+	void Scene::Draw(Graphics* graphics) const
 	{
-		m_objects.push_back(sceneObject);
+		for (const auto& m : m_layers)
+		{
+			if (m->isActive())
+				m->Draw(graphics);
+		}
 	}
+
+	void Scene::ProcessInput() const
+	{
+		for (const auto& m : m_layers)
+		{
+			if (m->isActive())
+				m->ProcessInput();
+		}
+	}
+
+	void Scene::AddLayer(std::unique_ptr<Layer> sceneLayer, const char* guid)
+	{
+		sceneLayer->setGuid(guid);
+		m_layers.push_back(std::move(sceneLayer));
+	}
+
+	std::unique_ptr<Layer> Scene::RemoveLayer(const char* guid)
+	{
+		std::unique_ptr<Layer> result = nullptr;
+
+		if(getLayerCount() > 0)
+		{
+			const auto found = std::find_if(m_layers.begin(), m_layers.end(),
+				[&](const std::unique_ptr<Layer>& layer) -> bool {return layer->getGuid() == guid; });
+
+
+			if (found != m_layers.end())
+			{
+				result = std::move(*found);
+
+				m_layers.erase(found);
+			}
+
+		}
+
+		return result;
+
+	}
+
+	Layer* Scene::getLayer(const char* guid)
+	{
+		if (getLayerCount() > 0)
+		{
+			const auto found = std::find_if(m_layers.begin(), m_layers.end(),
+				[&](const std::unique_ptr<Layer>& layer) -> bool {return layer->getGuid() == guid; });
+
+			if (*found)
+				return found->get();
+		}
+
+		return nullptr;
+	}
+
 };

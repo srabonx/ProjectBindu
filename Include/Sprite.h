@@ -4,7 +4,7 @@
 namespace BINDU
 {
 
-	class Sprite :public Drawable
+	class Sprite :public SceneObject
 	{
 
 	private:
@@ -38,13 +38,15 @@ namespace BINDU
 		void updateTransform();
 	public:
 		Sprite();
-		virtual ~Sprite();
+		~Sprite() = default;
 
 		bool				LoadSpriteFromFile(const wchar_t* filename) { return LoadFromFile(filename); }
 
-		void				Update(float dt);
+		virtual void		Update(float dt) override;
 		virtual void		Draw(Graphics* graphics) override;
 		void				Draw(Bnd_Rect_F srcRect, Graphics* graphics);
+		virtual void		ProcessInput() override
+		{}
 
 		inline void		    doesScale(bool value) { m_doesScale = value; }
 		inline void         setScaleTimer(int ms) { m_scaleTime = ms; }

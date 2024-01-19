@@ -3,20 +3,13 @@
 
 #include "Bindu.h"
 #include "BND_Helper.h"
+#include "SceneObject.h"
 
 namespace BINDU
 {
 
-	enum class origin
-	{
-		top_left,
-		center,
-		bottom_left,
-		bottom_right
 
-	};
-
-	class Drawable
+	class Drawable 
 	{
 	protected:
 
@@ -28,19 +21,21 @@ namespace BINDU
 		Bnd_Size						m_bitmapSize{};
 
 		D2D1_POINT_2F					m_origin{};
-		origin							m_e_origin{};
 
 		Vec2f							m_scale{ 1,1 };
 		float							m_rotation{};
+		Vec2f							m_translation{};
+
+		D2D1_MATRIX_3X2_F				m_transforms{};
 
 		/*
 		 *	TODO: Add Translation property ?
 		 */
 
 
-		D2D1::Matrix3x2F				m_translateMatrix;
-		D2D1::Matrix3x2F				m_rotationMatrix;
-		D2D1::Matrix3x2F				m_scalingMatrix;
+		D2D1_MATRIX_3X2_F				m_translateMatrix;
+		D2D1_MATRIX_3X2_F				m_rotationMatrix;
+		D2D1_MATRIX_3X2_F				m_scalingMatrix;
 
 
 
@@ -81,13 +76,6 @@ namespace BINDU
 		inline float	getWidth() const { return m_size.width; }
 		inline float	getHeight() const { return m_size.height; }
 
-		void			setDstRect(const Bnd_Rect_F& dstRect);
-		Bnd_Rect_F		getDstRect() const;
-
-		void			setSrcRect(const Bnd_Rect_F* srcRect);
-		Bnd_Rect_F		getSrcRect() const;					// REMINDER: might need to fix
-
-		inline void		setOrigin(const origin& origin) { m_e_origin = origin; }
 		inline void		setOrigin(const Vec2f& origin) { m_origin = { origin.x,origin.y }; }
 		inline void		setOrigin(const float x, const float y) { m_origin = { x,y }; }
 
@@ -98,6 +86,12 @@ namespace BINDU
 
 		inline void		setRotation(const float degree) { m_rotation = degree; }
 		inline float	getRotation() const { return m_rotation; }
+
+		inline void		setTranslation(const Vec2f& translation) { m_translation = translation; }
+		inline Vec2f	getTranslation() const { return m_translation; }
+
+		inline D2D1_MATRIX_3X2_F		getTransforms() const { return m_transforms; }
+		inline void						setTransforms(const D2D1_MATRIX_3X2_F& transforms) { m_transforms = transforms; }
 
 
 	};// class

@@ -13,10 +13,11 @@ Player::~Player()
 
 void Player::Init()
 {
-	m_position = { 100,100 };
+	
 	m_sprite.LoadSpriteFromFile(L"Resource/fire-warrior2.png");
 	m_animator.LoadAnimationFile("Resource/fire-warrior-animation.txt");
 	m_sprite.setPosition(m_position);
+	m_size = { 144,80 };
 	m_sprite.setSize(144, 80);
 	m_velocity = { 60.f,60.f };
 	m_animator.setFrameTime(100);
@@ -24,10 +25,8 @@ void Player::Init()
 
 void Player::Update(float dt)
 {
-//	m_sprite.Update(dt);
 	m_animator.Animate(m_srcRect);
 	m_sprite.setY(m_position.y);
-	
 	switch (moves)
 	{
 	case LEFT:
@@ -73,7 +72,7 @@ void Player::Animate()
 
 void Player::Draw(BINDU::Graphics* graphics)
 {
-	graphics->getRenderTarget()->DrawRectangle({ m_position.x,m_position.y,m_position.x + 144,m_position.y + 80 }, graphics->getSolidColorBrush());
+	graphics->getRenderTarget()->DrawRectangle({ m_position.x,m_position.y,m_position.x + m_size.width,m_position.y + m_size.height }, graphics->getSolidColorBrush());
 	m_sprite.Draw(m_srcRect,graphics);
 }
 

@@ -24,25 +24,4 @@ namespace BINDU
 		m_bitmapSize = { static_cast<int>(lSize.width),static_cast <int> (lSize.height) };
 	}
 
-	void Drawable::setDstRect(const Bnd_Rect_F& dstRect)
-	{
-		
-	}
-
-	Bnd_Rect_F Drawable::getDstRect() const
-	{
-
-
-		return {};
-	}
-
-	void Drawable::setSrcRect(const Bnd_Rect_F* srcRect)
-	{
-
-	}
-
-	Bnd_Rect_F Drawable::getSrcRect() const
-	{
-		return {};
-	}
 };

@@ -41,6 +41,7 @@ using namespace Microsoft::WRL;
 #include "Input.h"
 #include "BitmapLoader.h"
 #include "SceneObject.h"
+#include "Layer.h"
 #include "Scene.h"
 #include "SceneManager.h"
 #include "Drawable.h"

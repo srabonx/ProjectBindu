@@ -14,11 +14,6 @@ namespace BINDU
 		m_collisionType = COLLISION_RECT;
 	
 	}
-	Sprite::~Sprite() 
-	{
-		
-	}
-
 	
 
     void Sprite::Update(float dt)
@@ -57,16 +52,18 @@ namespace BINDU
 	{
 		m_origin = { m_position.x + (m_size.width / 2.f), m_position.y + (m_size.height / 2.f) };
 
-		//m_translateMatrix = D2D1::Matrix3x2F::Translation(0, 0);				// TODO: Add functionality?
+		m_translateMatrix = D2D1::Matrix3x2F::Translation(m_translation.x, m_translation.y);				// TODO: Add functionality?
 		m_rotationMatrix = D2D1::Matrix3x2F::Rotation(m_rotation, m_origin);
 		m_scalingMatrix = D2D1::Matrix3x2F::Scale(m_scale.x, m_scale.y, m_origin);
+
+		m_transforms = m_scalingMatrix * m_rotationMatrix * m_translateMatrix;
 	}
 
 	void Sprite::Draw(Graphics* graphics)
 	{
 		updateTransform();
 
-		graphics->getRenderTarget()->SetTransform(m_scalingMatrix * m_rotationMatrix );
+		graphics->getRenderTarget()->SetTransform(m_transforms);
 
 		graphics->getRenderTarget()->DrawBitmap(m_bitmap.Get(),
 			{ m_position.x,m_position.y,m_position.x + m_size.width,m_position.y + m_size.height },
@@ -82,7 +79,7 @@ namespace BINDU
 	{
 		updateTransform();
 
-		graphics->getRenderTarget()->SetTransform(m_scalingMatrix * m_rotationMatrix );
+		graphics->getRenderTarget()->SetTransform(m_transforms);
 
 		graphics->getRenderTarget()->DrawBitmap(m_bitmap.Get(),
 			{ m_position.x,m_position.y,m_position.x + m_size.width,m_position.y + m_size.height },

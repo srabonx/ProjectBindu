@@ -32,7 +32,6 @@ private:
 	BINDU::Sprite m_sprite;
 	BINDU::Animator m_animator;
 	MoveSet moves;
-	BINDU::Vec2f m_position{};
 	BINDU::Vec2f m_velocity{};
 	BINDU::Bnd_Rect_F m_srcRect{};
 public:
@@ -42,6 +41,6 @@ public:
 	virtual void Update(float dt) override;
 	virtual void Move();
 	virtual void Animate();
-	virtual void Draw(BINDU::Graphics* graphics);
-	void ProcessInput();
+	virtual void Draw(BINDU::Graphics* graphics) override;
+	virtual void ProcessInput() override;
 };

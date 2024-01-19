@@ -73,11 +73,10 @@ namespace BINDU
 		m_rotationMatrix = D2D1::Matrix3x2F::Rotation(rotation,m_origin);
 		m_scalingMatrix = D2D1::Matrix3x2F::Scale(scale, scale, m_origin);
 
-		
-		const D2D1_MATRIX_3X2_F transformMatrix = (m_scalingMatrix * m_rotationMatrix);
+		m_transforms = m_scalingMatrix * m_rotationMatrix;
 
 		DX::ThrowIfFailed(
-			m_spriteBatch->AddSprites(1, &lDstRect, &lSrcRect, &lColor, &transformMatrix)
+			m_spriteBatch->AddSprites(1, &lDstRect, &lSrcRect, &lColor, &m_transforms)
 		);
 	
 	}
@@ -128,12 +127,10 @@ namespace BINDU
 		m_rotationMatrix = D2D1::Matrix3x2F::Rotation(newRotation, m_origin);
 		m_scalingMatrix = D2D1::Matrix3x2F::Scale(newScale, newScale, m_origin);
 
-//		D2D1_MATRIX_3X2_F translateMatrix = D2D1::Matrix3x2F::Translation(0, 0);
-
-		const D2D1_MATRIX_3X2_F transformMatrix = (m_scalingMatrix * m_rotationMatrix);
+		m_transforms = m_scalingMatrix * m_rotationMatrix;
 
 		DX::ThrowIfFailed(
-			m_spriteBatch->SetSprites(index, 1, &lDstRect, lSrcRect, &lColor, &transformMatrix)
+			m_spriteBatch->SetSprites(index, 1, &lDstRect, lSrcRect, &lColor, &m_transforms)
 		);
 
 	}
