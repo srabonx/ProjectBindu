@@ -59,14 +59,14 @@ namespace BINDU
 		m_transforms = m_scalingMatrix * m_rotationMatrix * m_translateMatrix;
 	}
 
-	void Sprite::Draw(Graphics* graphics)
+	void Sprite::Draw(Graphics* graphics, const Vec2f& cameraOffset)
 	{
 		updateTransform();
 
 		graphics->getRenderTarget()->SetTransform(m_transforms);
-
+		
 		graphics->getRenderTarget()->DrawBitmap(m_bitmap.Get(),
-			{ m_position.x,m_position.y,m_position.x + m_size.width,m_position.y + m_size.height },
+			{ m_position.x - cameraOffset.x,m_position.y - cameraOffset.y,(m_position.x + m_size.width) - cameraOffset.x,(m_position.y + m_size.height) - cameraOffset.y },
 			1.0f,
 			D2D1_BITMAP_INTERPOLATION_MODE::D2D1_BITMAP_INTERPOLATION_MODE_LINEAR,
 			{ m_position.x,m_position.y,m_position.x + m_bitmapSize.width,m_position.y + m_bitmapSize.height });
@@ -75,14 +75,14 @@ namespace BINDU
 		
 	}
 
-	void Sprite::Draw(Bnd_Rect_F srcRect, Graphics* graphics)
+	void Sprite::Draw(Bnd_Rect_F srcRect, Graphics* graphics, const Vec2f& cameraOffset)
 	{
 		updateTransform();
 
 		graphics->getRenderTarget()->SetTransform(m_transforms);
 
 		graphics->getRenderTarget()->DrawBitmap(m_bitmap.Get(),
-			{ m_position.x,m_position.y,m_position.x + m_size.width,m_position.y + m_size.height },
+			{ m_position.x - cameraOffset.x,m_position.y - cameraOffset.y,(m_position.x + m_size.width) - cameraOffset.x,(m_position.y + m_size.height)-cameraOffset.y },
 			1.0f,
 			D2D1_BITMAP_INTERPOLATION_MODE::D2D1_BITMAP_INTERPOLATION_MODE_LINEAR,
 			D2D1::RectF(srcRect.x, srcRect.y, srcRect.x + srcRect.w, srcRect.y + srcRect.h));

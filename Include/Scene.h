@@ -22,7 +22,7 @@ namespace BINDU
 		~Scene() = default;
 
 		void			Update(float dt) const;
-		void			Draw(Graphics* graphics) const;
+		void			Draw(Graphics* graphics, const Vec2f& cameraOffset) const;
 		void			ProcessInput() const;
 
 		void			AddLayer(std::unique_ptr<Layer> sceneLayer, const char* guid);

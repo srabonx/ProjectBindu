@@ -22,6 +22,7 @@
     <ClCompile Include="src\Animator.cpp" />
     <ClCompile Include="src\Bindu.cpp" />
     <ClCompile Include="src\BitmapLoader.cpp" />
+    <ClCompile Include="src\Camera.cpp" />
     <ClCompile Include="src\Drawable.cpp" />
     <ClCompile Include="src\Entity.cpp" />
     <ClCompile Include="src\Font.cpp" />
@@ -42,6 +43,7 @@
     <ClInclude Include="Include\Bindu.h" />
     <ClInclude Include="Include\BitmapLoader.h" />
     <ClInclude Include="Include\BND_Helper.h" />
+    <ClInclude Include="Include\Camera.h" />
     <ClInclude Include="Include\constants.h" />
     <ClInclude Include="Include\Drawable.h" />
     <ClInclude Include="Include\Entity.h" />

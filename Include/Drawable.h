@@ -48,7 +48,7 @@ namespace BINDU
 		              Drawable() = default;
 		virtual		 ~Drawable() = default;
 
-		virtual void  Draw(Graphics* graphics) = 0;
+		virtual void  Draw(Graphics* graphics, const Vec2f& cameraOffset) = 0;
 
 		void		  SetBitmap(ID2D1Bitmap* bitmap);
 
@@ -80,6 +80,7 @@ namespace BINDU
 		inline void		setOrigin(const float x, const float y) { m_origin = { x,y }; }
 
 		inline Vec2f	getOrigin() const { return { m_origin.x,m_origin.y }; }
+		inline D2D1_POINT_2F* getD2Origin() { return &(m_origin); }
 
 		inline void		setScale(const float scaleX, const float scaleY) { m_scale = { scaleX,scaleY }; }
 		inline Vec2f	getScale() const { return m_scale; }

@@ -26,7 +26,7 @@ namespace BINDU
 
 		void			UpdateWithChild(float dt);
 
-		void			DrawWithChild(Graphics* graphics);
+		void			DrawWithChild(Graphics* graphics, const Vec2f& cameraOffset);
 
 		void			ProcessAllInput();
 

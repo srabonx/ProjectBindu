@@ -47,12 +47,12 @@ namespace BINDU
 		return nullptr;
 	}
 
-	void SceneManager::Draw(Graphics* graphics) const
+	void SceneManager::Draw(Graphics* graphics, const Vec2f& cameraOffset) const
 	{
 		for (const auto& m : m_scenes)
 		{
 			if (m->isActive())
-				m->Draw(graphics);
+				m->Draw(graphics,cameraOffset);
 		}
 	}
 

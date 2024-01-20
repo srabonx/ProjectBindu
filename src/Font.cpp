@@ -43,7 +43,7 @@ namespace BINDU
 			m_spriteBatch.AddSprite(dstRect, &srcRect, color,scale);
 			
 		}
-		m_spriteBatch.Draw(nullptr);
+		m_spriteBatch.Draw(nullptr,{0,0});
 		m_spriteBatch.Clear();
 	}
 

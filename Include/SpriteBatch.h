@@ -35,7 +35,7 @@ namespace BINDU
 
 		void						Clear() const;
 
-		virtual void			    Draw(Graphics* graphics) override;
+		virtual void			    Draw(Graphics* graphics, const Vec2f& cameraOffset) override;
 		void						Draw(Graphics* graphics, int index, int count = 1) const;
 
 		void						Update(float dt);

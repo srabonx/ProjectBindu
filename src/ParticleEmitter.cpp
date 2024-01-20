@@ -62,7 +62,7 @@ namespace BINDU
 		m_currentAlive = currentAlive;
 	}
 
-	void ParticleEmitter::Draw(Graphics* graphics)
+	void ParticleEmitter::Draw(Graphics* graphics, const Vec2f& cameraOffset)
 	{
 		if (m_currentAlive > 0)
 		{
@@ -73,7 +73,7 @@ namespace BINDU
 				else
 					continue;
 			} */
-			m_spriteBatch.Draw(graphics);
+			m_spriteBatch.Draw(graphics,cameraOffset);
 		}
 	}
 

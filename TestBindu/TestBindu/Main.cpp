@@ -32,6 +32,8 @@ private:
 
 	Font m_font;
 
+	Camera m_camera;
+
 public:
 	MainGame()
 	{
@@ -95,7 +97,7 @@ public:
 		props.startColor = { 255,215,0,20 };
 		props.endColor = { 255,0,0,10 };
 		props.colorRandomnessRange = iRange(0, 255);
-		props.colorOpacityRange = iRange(0,255 );
+		props.colorOpacityRange = iRange(0, 255);
 		props.minTimetoChangeColor = 0.f;
 		props.fadeOut = true;
 		props.rotation = 0;
@@ -104,7 +106,7 @@ public:
 
 		m_emitter.Init(props);
 		m_emitter.LoadParticleSprite(L"Resource/particle16.png");
-		m_emitter.setPosition({ 400.f,400.f });		
+		m_emitter.setPosition({ 400.f,400.f });
 		m_emitter.setDirection(0);
 		m_emitter.setSpread(360);
 		m_emitter.setEmissionInterval(0);
@@ -146,8 +148,8 @@ public:
 		m_sprite->setSize(1280, 800);
 		m_sprite->setActive(true);
 
-		
-		
+
+
 
 		m_player = std::make_unique<Player>();
 		player2 = std::make_unique<Player>();
@@ -156,7 +158,7 @@ public:
 		backgroundLayer = std::make_unique<Layer>();
 		foregroundLayer = std::make_unique<Layer>();
 
- 		m_player->Init();
+		m_player->Init();
 		m_player->setPosition(200, 100);
 		m_player->setRotation(0);
 		m_player->setActive(true);
@@ -166,20 +168,22 @@ public:
 		player2->setTranslation({ 0,0 });
 		player2->setRotation(0);
 		player2->setActive(true);
-		
-		m_player->AddChild(std::move(player2),"player2");
+
+		m_player->AddChild(std::move(player2), "player2");
 
 		backgroundLayer->AddObject(std::move(m_sprite), "bgimage");
 		backgroundLayer->setActive(true);
-		foregroundLayer->AddObject(std::move(m_player),"mainPlayer");
+		foregroundLayer->AddObject(std::move(m_player), "mainPlayer");
 		foregroundLayer->setActive(true);
 
 		m_scene->AddLayer(std::move(backgroundLayer), "backgroundLayer");
 		m_scene->AddLayer(std::move(foregroundLayer), "foregroundLayer");
 		m_scene->setActive(true);
 
-		m_sceneManager.AddScene(std::move(m_scene),"firstScene");
-		
+		m_sceneManager.AddScene(std::move(m_scene), "firstScene");
+
+		m_camera.SetTarget(*m_sceneManager.getScene("firstScene")->getLayer("foregroundLayer")->getObject("mainPlayer"));
+		m_camera.SetSize({ 1280, 800 });
 		m_font.Init();
 
 		m_font.LoadBitmapFont(L"Resource/unispace-bitmapfont.png");
@@ -191,13 +195,13 @@ public:
 	void Update(float dt)
 	{
 
- 		if (Input::isKeyPressed(BND_X))
- 			g_engine->setMaximizeProcessor(processorMax = !processorMax);
- 
+		if (Input::isKeyPressed(BND_X))
+			g_engine->setMaximizeProcessor(processorMax = !processorMax);
+
 
 		if (Input::isMouseButtonHold(BND_BTN_LEFT))
 		{
-			m_emitter.setPosition({(float) Input::getMousePosition().x,(float) Input::getMousePosition().y });
+			m_emitter.setPosition({ (float)Input::getMousePosition().x,(float)Input::getMousePosition().y });
 			m_emitter.Generate();
 		}
 
@@ -226,7 +230,7 @@ public:
 
 		m_emitter.Update(dt);
 		emitter2.Update(dt);
-
+		m_camera.Update(dt);
 		m_sceneManager.Update(dt);
 
 		
@@ -243,7 +247,7 @@ public:
 		graphics->getRenderTarget()->Clear(D2D1::ColorF(D2D1::ColorF::Black));
 
 
-		m_sceneManager.Draw(graphics);
+		m_sceneManager.Draw(graphics,m_camera.getOffset());
 //		m_spriteBatch.Draw(graphics);
 
  //		for (auto& m : m_vec)
@@ -251,8 +255,8 @@ public:
  //			m->Draw(graphics);
 //		}
 
-		m_emitter.Draw(graphics);
-		emitter2.Draw(graphics);
+		m_emitter.Draw(graphics,m_camera.getOffset());
+		emitter2.Draw(graphics,m_camera.getOffset());
 
 
 		m_font.PrintText(20, 10, "Real: " + std::to_string(g_engine->getRealFrameRate()), { 255,255,255,255 },1);

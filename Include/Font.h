@@ -25,7 +25,7 @@ namespace BINDU
 
 		void PrintText(int x, int y, const std::string& text, const BND_COLOR& color, float scale);
 
-		virtual void Draw(Graphics* graphics) override
+		virtual void Draw(Graphics* graphics, const Vec2f& cameraOffset) override
 		{
 			
 		}

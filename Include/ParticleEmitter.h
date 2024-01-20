@@ -99,7 +99,7 @@ namespace BINDU
 		void			Init(const ParticleProps& particleProps);
 
 		virtual void	Update(float dt);
-		virtual void	Draw(Graphics* graphics) override;
+		virtual void	Draw(Graphics* graphics, const Vec2f& cameraOffset) override;
 
 		void			LoadParticleSprite(const wchar_t* filename);
 

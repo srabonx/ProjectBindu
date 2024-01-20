@@ -32,7 +32,7 @@ void Player::Update(float dt)
 	case LEFT:
 		m_position.x -= m_velocity.x * dt;
 		m_sprite.setScale(-1, 1);
-		m_sprite.setX(m_position.x-30);
+		m_sprite.setX(m_position.x+400);
 		m_animator.setAnimation("running");
 		break;
 	case RIGHT:
@@ -70,10 +70,11 @@ void Player::Animate()
 	
 }
 
-void Player::Draw(BINDU::Graphics* graphics)
+void Player::Draw(BINDU::Graphics* graphics, const BINDU::Vec2f& cameraOffset)
 {
-	graphics->getRenderTarget()->DrawRectangle({ m_position.x,m_position.y,m_position.x + m_size.width,m_position.y + m_size.height }, graphics->getSolidColorBrush());
-	m_sprite.Draw(m_srcRect,graphics);
+
+	graphics->getRenderTarget()->DrawRectangle({ m_position.x - cameraOffset.x,m_position.y-cameraOffset.y,(m_position.x + m_size.width) - cameraOffset.x,(m_position.y + m_size.height) - cameraOffset.y }, graphics->getSolidColorBrush());
+	m_sprite.Draw(m_srcRect,graphics,cameraOffset);
 }
 
 void Player::ProcessInput()

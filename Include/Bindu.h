@@ -50,6 +50,7 @@ using namespace Microsoft::WRL;
 #include "SpriteBatch.h"
 #include "ParticleEmitter.h"
 #include "Font.h"
+#include "Camera.h"
 #include "Animator.h"
 
 

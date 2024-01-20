@@ -161,7 +161,7 @@ namespace BINDU
 
 	}
 
-	void SpriteBatch::Draw(Graphics* graphics)
+	void SpriteBatch::Draw(Graphics* graphics, const Vec2f& cameraOffset)
 	{
 		m_deviceContext->DrawSpriteBatch(m_spriteBatch.Get(), m_bitmap.Get());
 	}

@@ -43,8 +43,8 @@ namespace BINDU
 		bool				LoadSpriteFromFile(const wchar_t* filename) { return LoadFromFile(filename); }
 
 		virtual void		Update(float dt) override;
-		virtual void		Draw(Graphics* graphics) override;
-		void				Draw(Bnd_Rect_F srcRect, Graphics* graphics);
+		virtual void		Draw(Graphics* graphics, const Vec2f& cameraOffset) override;
+		void				Draw(Bnd_Rect_F srcRect, Graphics* graphics, const Vec2f& cameraOffset);
 		virtual void		ProcessInput() override
 		{}
 
