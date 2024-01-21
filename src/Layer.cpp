@@ -13,12 +13,20 @@ namespace BINDU
 
 	}
 
-	void Layer::Draw(Graphics* graphics, const Vec2f& cameraOffset) const
+	void Layer::Draw(Graphics* graphics, const D2D1_MATRIX_3X2_F& cameraMatrix) const
 	{
 		for (const auto& m : m_objects)
 		{
+
 			if (m->isActive())
-				m->DrawWithChild(graphics,cameraOffset);
+			{
+				D2D1_MATRIX_3X2_F cameraMatrixWithParallax = cameraMatrix;
+				cameraMatrixWithParallax.dx = cameraMatrix.dx * m_parallaxFactor.x;
+				cameraMatrixWithParallax.dy = cameraMatrix.dy * m_parallaxFactor.y;
+
+				m->DrawWithChild(graphics, cameraMatrixWithParallax);
+
+			}
 		}
 	}
 

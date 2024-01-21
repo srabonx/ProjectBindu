@@ -32,7 +32,7 @@ namespace BINDU
 		
 	};
 
-	class ParticleEmitter : public Drawable
+	class ParticleEmitter : public SceneObject
 	{
 
 	private:
@@ -99,7 +99,11 @@ namespace BINDU
 		void			Init(const ParticleProps& particleProps);
 
 		virtual void	Update(float dt);
-		virtual void	Draw(Graphics* graphics, const Vec2f& cameraOffset) override;
+		virtual void	Draw(Graphics* graphics, const D2D1_MATRIX_3X2_F& cameraMatrix) override;
+		virtual void	ProcessInput() override
+		{
+			
+		}
 
 		void			LoadParticleSprite(const wchar_t* filename);
 

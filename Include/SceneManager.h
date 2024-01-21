@@ -17,7 +17,7 @@ namespace BINDU
 		~SceneManager() = default;
 
 		void		 Update(float dt) const;
-		void		 Draw(Graphics* graphics,const Vec2f& cameraOffset) const;
+		void		 Draw(Graphics* graphics, const D2D1_MATRIX_3X2_F& cameraMatrix) const;
 		void		 ProcessInput() const;
 
 		void		 AddScene(std::unique_ptr<Scene> scene, const char* guid);

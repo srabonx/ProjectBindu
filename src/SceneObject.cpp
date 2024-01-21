@@ -17,25 +17,17 @@ namespace BINDU
 		}
 	}
 
-	void SceneObject::DrawWithChild(Graphics* graphics, const Vec2f& cameraOffset)
+	void SceneObject::DrawWithChild(Graphics* graphics, const D2D1_MATRIX_3X2_F& cameraMatrix)
 	{
-		UpdateTransforms();
 
-		graphics->getRenderTarget()->SetTransform(m_transforms);
-		Draw(graphics,cameraOffset);
+		Draw(graphics,cameraMatrix);
 		graphics->getRenderTarget()->SetTransform(D2D1::Matrix3x2F::Identity());
 
 		for (const auto& m : m_childs)
 		{
 			if (m->isActive())
 			{
-				m->UpdateTransforms();
-
-				m->setTransforms(m->getTransforms() * getTransforms());
-
-
-				graphics->getRenderTarget()->SetTransform(m->getTransforms());
-				m->Draw(graphics,cameraOffset);
+				m->Draw(graphics,getTransforms() * cameraMatrix);
 				graphics->getRenderTarget()->SetTransform(D2D1::Matrix3x2F::Identity());
 			}
 		}

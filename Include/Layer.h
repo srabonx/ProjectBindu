@@ -11,6 +11,8 @@ namespace BINDU
 
 		bool	m_isActive{};
 
+		Vec2f   m_parallaxFactor{ 1.f,1.f };
+
 		std::string m_guid{};
 
 		std::vector<std::unique_ptr<SceneObject>> m_objects;
@@ -21,7 +23,7 @@ namespace BINDU
 		~Layer() = default;
 
 		void			Update(float dt) const;
-		void			Draw(Graphics* graphics, const Vec2f& cameraOffset) const;
+		void			Draw(Graphics* graphics, const D2D1_MATRIX_3X2_F& cameraMatrix) const;
 		void			ProcessInput() const;
 
 		void			AddObject(std::unique_ptr<SceneObject> sceneObject, const char* guid);
@@ -39,6 +41,9 @@ namespace BINDU
 		inline void		setGuid(const char* guid) { m_guid = guid; }
 
 		inline std::string getGuid() const { return m_guid; }
+
+		inline void		setParallaxFactor(const Vec2f& parallaxFactor) { m_parallaxFactor = parallaxFactor; }
+		inline Vec2f	getParallaxFactor() const { return m_parallaxFactor; }
 
 	};
 

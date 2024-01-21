@@ -4,7 +4,7 @@
 
 namespace BINDU
 {
-	class SpriteBatch : public Drawable
+	class SpriteBatch : public SceneObject
 	{
 	private:
 		ComPtr<ID2D1SpriteBatch>		m_spriteBatch;
@@ -13,6 +13,8 @@ namespace BINDU
 		int								m_spriteCount{ 0 };
 
 		float							m_coEff{ 0 };
+
+		D2D1_MATRIX_3X2_F				m_cameraTransform{ D2D1::Matrix3x2F::Identity() };
 
 	protected:
 
@@ -35,10 +37,14 @@ namespace BINDU
 
 		void						Clear() const;
 
-		virtual void			    Draw(Graphics* graphics, const Vec2f& cameraOffset) override;
-		void						Draw(Graphics* graphics, int index, int count = 1) const;
+		virtual void			    Draw(Graphics* graphics, const D2D1_MATRIX_3X2_F& cameraMatrix) override;
+		void						Draw(Graphics* graphics, const D2D1_MATRIX_3X2_F& cameraMatrix, int index, int count = 1);
 
-		void						Update(float dt);
+		virtual void				Update(float dt) override;
+		virtual void				ProcessInput() override
+		{
+			
+		}
 
 		// Accessor/Mutator functions
 

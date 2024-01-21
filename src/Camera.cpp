@@ -5,19 +5,25 @@ namespace BINDU
 {
 	void Camera::SetTarget(SceneObject& sceneObject)
 	{
-		target = sceneObject.getD2Origin();
+		m_target = sceneObject.getD2Origin();
 	}
 
-	void Camera::Update(float dt)
+	void Camera::Update(float dt, const SceneObject& sceneObject)
 	{
-		if(target != nullptr)
-		{
-			m_viewPort.x = target->x - (1280.f / 2.f);
-			m_viewPort.y = target->y - (800.f / 2.f);
+		m_offset.x = (m_target->x - (g_engine->getWindowWidth()  * 0.5f));
+		m_offset.y = (m_target->y - (g_engine->getWindowHeight() * 0.5f));
 
-			
+		if (m_offset.x < 0)
+			m_offset.x = 0;
+		if (m_offset.y < 0)
+			m_offset.y = 0;
 
-			m_offset = { m_viewPort.x,m_viewPort.y };
-		}
+		m_position.x = (m_offset.x + (m_position.x - m_offset.x) * 0.93f);
+		m_position.y = (m_offset.y + (m_position.y - m_offset.y) * 0.95f);
+
+
+		m_transformMatrix = D2D1::Matrix3x2F::Translation(-m_position.x , -m_position.y ) *
+			D2D1::Matrix3x2F::Rotation(m_rotation, *m_target)*
+			D2D1::Matrix3x2F::Scale(m_zoom, m_zoom, *m_target);
 	}
 };

@@ -123,11 +123,15 @@ namespace BINDU
 		else
 			lSrcRect = nullptr;
 
+
+
 		m_origin = { lDstRect.left + ((lDstRect.right - lDstRect.left) / 2.f), lDstRect.top + ((lDstRect.right - lDstRect.left) / 2.f) };
 		m_rotationMatrix = D2D1::Matrix3x2F::Rotation(newRotation, m_origin);
 		m_scalingMatrix = D2D1::Matrix3x2F::Scale(newScale, newScale, m_origin);
 
-		m_transforms = m_scalingMatrix * m_rotationMatrix;
+		m_transforms = m_scalingMatrix * m_rotationMatrix * m_cameraTransform;
+
+//		setTransforms(m_transforms * m_cameraTransform);
 
 		DX::ThrowIfFailed(
 			m_spriteBatch->SetSprites(index, 1, &lDstRect, lSrcRect, &lColor, &m_transforms)
@@ -151,8 +155,9 @@ namespace BINDU
 		m_spriteBatch->Clear();
 	}
 
-	void SpriteBatch::Draw(Graphics* graphics, int index, int count) const
+	void SpriteBatch::Draw(Graphics* graphics, const D2D1_MATRIX_3X2_F& cameraMatrix, int index, int count)
 	{
+		m_cameraTransform = cameraMatrix;
 		m_deviceContext->DrawSpriteBatch(m_spriteBatch.Get(), index, count, m_bitmap.Get());
 	}
 
@@ -161,8 +166,9 @@ namespace BINDU
 
 	}
 
-	void SpriteBatch::Draw(Graphics* graphics, const Vec2f& cameraOffset)
+	void SpriteBatch::Draw(Graphics* graphics, const D2D1_MATRIX_3X2_F& cameraMatrix)
 	{
+		m_cameraTransform = cameraMatrix;
 		m_deviceContext->DrawSpriteBatch(m_spriteBatch.Get(), m_bitmap.Get());
 	}
 };// namespace

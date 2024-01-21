@@ -41,6 +41,6 @@ public:
 	virtual void Update(float dt) override;
 	virtual void Move();
 	virtual void Animate();
-	virtual void Draw(BINDU::Graphics* graphics, const BINDU::Vec2f& cameraOffset) override;
+	virtual void Draw(BINDU::Graphics* graphics,const D2D1_MATRIX_3X2_F& cameraMatrix) override;
 	virtual void ProcessInput() override;
 };

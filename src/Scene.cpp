@@ -12,12 +12,12 @@ namespace BINDU
 		}
 	}
 
-	void Scene::Draw(Graphics* graphics, const Vec2f& cameraOffset) const
+	void Scene::Draw(Graphics* graphics, const D2D1_MATRIX_3X2_F& cameraMatrix) const
 	{
 		for (const auto& m : m_layers)
 		{
 			if (m->isActive())
-				m->Draw(graphics,cameraOffset);
+				m->Draw(graphics,cameraMatrix);
 		}
 	}
 

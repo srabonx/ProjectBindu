@@ -53,7 +53,7 @@ namespace BINDU {
 			return degree;
 		}
 
-		inline Vector2& operator + (const Vector2& rhs)
+		inline Vector2 operator + (const Vector2& rhs)
 		{
 			return Vector2(x + rhs.x, y + rhs.y);
 		}
@@ -66,7 +66,7 @@ namespace BINDU {
 			return (*this);
 		}
 
-		inline Vector2& operator += (const float rhs)
+		inline Vector2 operator += (const float rhs)
 		{
 			x += rhs;
 			y += rhs;
@@ -74,12 +74,12 @@ namespace BINDU {
 			return(*this);
 		}
 
-		inline Vector2& operator - ()
+		inline Vector2 operator - ()
 		{
 			return Vector2(-x, -y);
 		}
 
-		inline Vector2& operator - (const Vector2& rhs)
+		inline Vector2 operator - (const Vector2& rhs)
 		{
 			return Vector2(x - rhs.x, y - rhs.y);
 		}
@@ -92,7 +92,7 @@ namespace BINDU {
 			return (*this);
 		}
 
-		inline Vector2& operator * (const Vector2& rhs)
+		inline Vector2 operator * (const Vector2& rhs)
 		{
 			return Vector2(x * rhs.x, y * rhs.y);
 		}
@@ -105,7 +105,7 @@ namespace BINDU {
 			return (*this);
 		}
 
-		inline Vector2& operator / (const T rhs)
+		inline Vector2 operator / (const T rhs)
 		{
 			rhs = 1.0f / rhs;
 

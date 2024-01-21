@@ -22,7 +22,7 @@ namespace BINDU
 
 		virtual void Update(float dt) = 0;
 		virtual void Animate() = 0;
-		virtual void Draw(Graphics* graphics) = 0;
+		virtual void Draw(Graphics* graphics, const D2D1_MATRIX_3X2_F& cameraMatrix) = 0;
 
 		inline void setID(int value) { id = value; }
 		inline int getId() const { return id; }

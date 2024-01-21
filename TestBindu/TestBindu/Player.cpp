@@ -19,7 +19,7 @@ void Player::Init()
 	m_sprite.setPosition(m_position);
 	m_size = { 144,80 };
 	m_sprite.setSize(144, 80);
-	m_velocity = { 60.f,60.f };
+	m_velocity = { 200.f,200.f };
 	m_animator.setFrameTime(100);
 }
 
@@ -32,7 +32,7 @@ void Player::Update(float dt)
 	case LEFT:
 		m_position.x -= m_velocity.x * dt;
 		m_sprite.setScale(-1, 1);
-		m_sprite.setX(m_position.x+400);
+		m_sprite.setX(m_position.x - 30);
 		m_animator.setAnimation("running");
 		break;
 	case RIGHT:
@@ -70,11 +70,12 @@ void Player::Animate()
 	
 }
 
-void Player::Draw(BINDU::Graphics* graphics, const BINDU::Vec2f& cameraOffset)
+void Player::Draw(BINDU::Graphics* graphics, const D2D1_MATRIX_3X2_F& cameraMatrix)
 {
-
-	graphics->getRenderTarget()->DrawRectangle({ m_position.x - cameraOffset.x,m_position.y-cameraOffset.y,(m_position.x + m_size.width) - cameraOffset.x,(m_position.y + m_size.height) - cameraOffset.y }, graphics->getSolidColorBrush());
-	m_sprite.Draw(m_srcRect,graphics,cameraOffset);
+	UpdateTransforms();
+	graphics->getRenderTarget()->SetTransform(m_transforms * cameraMatrix);
+	graphics->getRenderTarget()->DrawRectangle({ m_position.x,m_position.y,(m_position.x + m_size.width) ,(m_position.y + m_size.height)}, graphics->getSolidColorBrush());
+	m_sprite.Draw(m_srcRect,graphics,cameraMatrix);
 }
 
 void Player::ProcessInput()

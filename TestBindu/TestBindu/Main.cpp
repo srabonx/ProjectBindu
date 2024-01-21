@@ -14,14 +14,15 @@ class MainGame
 private:
 	bool processorMax;
 	std::unique_ptr<Player> m_player;
-	std::unique_ptr<Player> player2;
+	std::unique_ptr<Sprite> sprite2;
+	std::unique_ptr< ParticleEmitter> emitter2;
 
 	ComPtr<ID2D1Bitmap> bitmap;
 	ID2D1Bitmap* bitmap2;
 	std::unique_ptr<Sprite> m_sprite;
 	std::vector<Sprite*> m_vec;
 	ParticleEmitter m_emitter;
-	ParticleEmitter emitter2;
+	
 	SpriteBatch m_spriteBatch;
 	float m_posX{ 0 }, m_posY{ 0 };
 
@@ -33,6 +34,7 @@ private:
 	Font m_font;
 
 	Camera m_camera;
+
 
 public:
 	MainGame()
@@ -62,7 +64,6 @@ public:
 			}
 			m_vec.clear();
 		}
-
 	}
 
 	bool Preload()
@@ -76,8 +77,8 @@ public:
 		EngineProperties props;
 		props.versionNotice = true;
 		props.windowTitle = "Worked";
-		props.windowWidth = 1280;
-		props.windowHeight = 800;
+		props.windowWidth = 800;
+		props.windowHeight = 600;
 		props.windowIcon = "Resource/Bindu.ico";
 
 		g_engine->setEngineProperties(props);
@@ -110,7 +111,7 @@ public:
 		m_emitter.setDirection(0);
 		m_emitter.setSpread(360);
 		m_emitter.setEmissionInterval(0);
-		m_emitter.setEmissionRate(30);
+		m_emitter.setEmissionRate(70);
 		m_emitter.setMax(20000);
 		m_emitter.onLoop(false);
 
@@ -128,17 +129,19 @@ public:
 		props.rotationRate = 20;
 		props.lifeTime = 14.f;
 
-		emitter2.Init(props);
-		emitter2.LoadParticleSprite(L"Resource/smoke.png");
-		emitter2.setPosition({ 600.f,600.f });
-		emitter2.setSize({ 50.f,50.f });
-		emitter2.setDirection(240);
-		emitter2.setSpread(70);
-		emitter2.setEmissionInterval(20);
-		emitter2.setEmissionRate(6);
-		emitter2.setMax(3000);
-		emitter2.onLoop(true);
+		emitter2 = std::make_unique<ParticleEmitter>();
+		emitter2->Init(props);
+		emitter2->LoadParticleSprite(L"Resource/smoke.png");
+		emitter2->setPosition({ 600.f,600.f });
+		emitter2->setSize({ 50.f,50.f });
+		emitter2->setDirection(240);
+		emitter2->setSpread(70);
+		emitter2->setEmissionInterval(20);
+		emitter2->setEmissionRate(6);
+		emitter2->setMax(3000);
+		emitter2->onLoop(true);
 
+		emitter2->setActive(true);
 
 		m_sprite = std::make_unique<Sprite>();
 
@@ -152,7 +155,7 @@ public:
 
 
 		m_player = std::make_unique<Player>();
-		player2 = std::make_unique<Player>();
+		sprite2 = std::make_unique<Sprite>();
 		m_scene = std::make_unique<Scene>();
 
 		backgroundLayer = std::make_unique<Layer>();
@@ -163,18 +166,23 @@ public:
 		m_player->setRotation(0);
 		m_player->setActive(true);
 
-		player2->Init();
-		player2->setPosition(100, 100);
-		player2->setTranslation({ 0,0 });
-		player2->setRotation(0);
-		player2->setActive(true);
+		sprite2->LoadSpriteFromFile(L"Resource/Bindu.png");
 
-		m_player->AddChild(std::move(player2), "player2");
+		sprite2->setPosition(50, 50);
+		sprite2->setSize(60, 60);
+		sprite2->setActive(true);
+
+
+		m_player->AddChild(std::move(sprite2), "sprite2");
 
 		backgroundLayer->AddObject(std::move(m_sprite), "bgimage");
 		backgroundLayer->setActive(true);
+		//foregroundLayer->AddObject(std::move(m_sprite), "bdimage");
 		foregroundLayer->AddObject(std::move(m_player), "mainPlayer");
+		foregroundLayer->AddObject(std::move(emitter2), "emitter2");
 		foregroundLayer->setActive(true);
+
+		backgroundLayer->setParallaxFactor({ 0.5f, 0.5f });
 
 		m_scene->AddLayer(std::move(backgroundLayer), "backgroundLayer");
 		m_scene->AddLayer(std::move(foregroundLayer), "foregroundLayer");
@@ -183,12 +191,13 @@ public:
 		m_sceneManager.AddScene(std::move(m_scene), "firstScene");
 
 		m_camera.SetTarget(*m_sceneManager.getScene("firstScene")->getLayer("foregroundLayer")->getObject("mainPlayer"));
-		m_camera.SetSize({ 1280, 800 });
+		
 		m_font.Init();
 
 		m_font.LoadBitmapFont(L"Resource/unispace-bitmapfont.png");
 		m_font.setCharSize(9, 20);
 
+		
 		return true;
 	}
 
@@ -201,7 +210,7 @@ public:
 
 		if (Input::isMouseButtonHold(BND_BTN_LEFT))
 		{
-			m_emitter.setPosition({ (float)Input::getMousePosition().x,(float)Input::getMousePosition().y });
+			m_emitter.setPosition({ (float)Input::getMousePosition().x - m_camera.getCameraMatrix().dx,(float)Input::getMousePosition().y - m_camera.getCameraMatrix().dy });
 			m_emitter.Generate();
 		}
 
@@ -209,19 +218,20 @@ public:
 		{
 			//	emitter2.setPosition({ (float)Input::getMousePosition().x,(float)Input::getMousePosition().y });
 
-			Vec2f mousePos = { static_cast<float>(Input::getMousePosition().x),static_cast<float>(Input::getMousePosition().y) };
-			Vec2f emitterPos = emitter2.getPosition();
+			Vec2f mousePos = { static_cast<float>(Input::getMousePosition().x - m_camera.getCameraMatrix().dx),static_cast<float>(Input::getMousePosition().y - m_camera.getCameraMatrix().dy) };
+			Vec2f emitterPos = m_sceneManager.getScene("firstScene")->getLayer("foregroundLayer")->getObject("emitter2")->getPosition();
 
 			float angle = mousePos.Angle(emitterPos);
 
-			emitter2.setDirection(angle);
+			ParticleEmitter* temp = reinterpret_cast<ParticleEmitter*> (m_sceneManager.getScene("firstScene")->getLayer("foregroundLayer")->getObject("emitter2"));
+			temp->setDirection(angle);
 			std::cout << angle << std::endl;
 		}
 
 		if (Input::isKeyPressed(BND_T))
-			m_sceneManager.getScene("firstScene")->RemoveLayer("backgroundLayer");
-		if (Input::isKeyPressed(BND_O))
-			m_sceneManager.getScene("firstScene")->getLayer("foregroundLayer")->getObject("mainPlayer")->RemoveChild("player2");
+			m_sceneManager.getScene("firstScene")->getLayer("backgroundLayer")->AddObject(m_sceneManager.getScene("firstScene")->getLayer("foregroundLayer")->RemoveObject("emitter2"),"emitter2");
+		if (Input::isKeyHold(BND_O))
+			m_sceneManager.getScene("firstScene")->getLayer("foregroundLayer")->getObject("mainPlayer")->setRotation(m_posX++);
 
 		if (Input::isKeyPressed(BND_L))
 			m_emitter.onLoop(true);
@@ -229,8 +239,8 @@ public:
 			m_emitter.onLoop(false);
 
 		m_emitter.Update(dt);
-		emitter2.Update(dt);
-		m_camera.Update(dt);
+
+		m_camera.Update(dt,* m_sceneManager.getScene("firstScene")->getLayer("foregroundLayer")->getObject("mainPlayer"));
 		m_sceneManager.Update(dt);
 
 		
@@ -247,7 +257,7 @@ public:
 		graphics->getRenderTarget()->Clear(D2D1::ColorF(D2D1::ColorF::Black));
 
 
-		m_sceneManager.Draw(graphics,m_camera.getOffset());
+		m_sceneManager.Draw(graphics,m_camera.getCameraMatrix());
 //		m_spriteBatch.Draw(graphics);
 
  //		for (auto& m : m_vec)
@@ -255,14 +265,17 @@ public:
  //			m->Draw(graphics);
 //		}
 
-		m_emitter.Draw(graphics,m_camera.getOffset());
-		emitter2.Draw(graphics,m_camera.getOffset());
+		m_emitter.Draw(graphics,m_camera.getCameraMatrix());
+	//	emitter2.Draw(graphics,m_camera.getCameraMatrix());
 
 
 		m_font.PrintText(20, 10, "Real: " + std::to_string(g_engine->getRealFrameRate()), { 255,255,255,255 },1);
 		m_font.PrintText(20, 30, "Core: " + std::to_string(g_engine->getCoreFrameRate()), { 255,255,255,255 }, 1);
 
 		m_font.PrintText(500, 300, "ABCDabcd", {255,255,255,255}, 1);
+
+
+		//m_font.PrintText(500, 400, std::to_string(tempPlayer->getPosition().x), { 255,255,255,255 },1);
 
 	}
 };

@@ -35,7 +35,7 @@ namespace BINDU
 		int								   m_rotationTime;
 		float							   m_rotationDelta;
 
-		void updateTransform();
+		
 	public:
 		Sprite();
 		~Sprite() = default;
@@ -43,10 +43,11 @@ namespace BINDU
 		bool				LoadSpriteFromFile(const wchar_t* filename) { return LoadFromFile(filename); }
 
 		virtual void		Update(float dt) override;
-		virtual void		Draw(Graphics* graphics, const Vec2f& cameraOffset) override;
-		void				Draw(Bnd_Rect_F srcRect, Graphics* graphics, const Vec2f& cameraOffset);
+		virtual void		Draw(Graphics* graphics, const D2D1_MATRIX_3X2_F& cameraMatrix) override;
+		void				Draw(Bnd_Rect_F srcRect, Graphics* graphics, const D2D1_MATRIX_3X2_F& cameraMatrix);
 		virtual void		ProcessInput() override
 		{}
+		virtual void UpdateTransforms() override;
 
 		inline void		    doesScale(bool value) { m_doesScale = value; }
 		inline void         setScaleTimer(int ms) { m_scaleTime = ms; }

@@ -48,7 +48,7 @@ namespace BINDU
 
 
 
-	void Sprite::updateTransform()
+	void Sprite::UpdateTransforms()
 	{
 		m_origin = { m_position.x + (m_size.width / 2.f), m_position.y + (m_size.height / 2.f) };
 
@@ -59,35 +59,35 @@ namespace BINDU
 		m_transforms = m_scalingMatrix * m_rotationMatrix * m_translateMatrix;
 	}
 
-	void Sprite::Draw(Graphics* graphics, const Vec2f& cameraOffset)
+	void Sprite::Draw(Graphics* graphics, const D2D1_MATRIX_3X2_F& cameraMatrix)
 	{
-		updateTransform();
+		UpdateTransforms();
 
-		graphics->getRenderTarget()->SetTransform(m_transforms);
+		graphics->getRenderTarget()->SetTransform(m_transforms * cameraMatrix);
 		
 		graphics->getRenderTarget()->DrawBitmap(m_bitmap.Get(),
-			{ m_position.x - cameraOffset.x,m_position.y - cameraOffset.y,(m_position.x + m_size.width) - cameraOffset.x,(m_position.y + m_size.height) - cameraOffset.y },
+			{ m_position.x,m_position.y,(m_position.x + m_size.width),(m_position.y + m_size.height) },
 			1.0f,
 			D2D1_BITMAP_INTERPOLATION_MODE::D2D1_BITMAP_INTERPOLATION_MODE_LINEAR,
-			{ m_position.x,m_position.y,m_position.x + m_bitmapSize.width,m_position.y + m_bitmapSize.height });
+			D2D1::RectF(0.f, 0.f, static_cast<float>(m_bitmapSize.width),static_cast<float>( m_bitmapSize.height)));
 
-		graphics->getRenderTarget()->SetTransform(D2D1::Matrix3x2F::Identity());
+//		graphics->getRenderTarget()->SetTransform(D2D1::Matrix3x2F::Identity());
 		
 	}
 
-	void Sprite::Draw(Bnd_Rect_F srcRect, Graphics* graphics, const Vec2f& cameraOffset)
+	void Sprite::Draw(Bnd_Rect_F srcRect, Graphics* graphics, const D2D1_MATRIX_3X2_F& cameraMatrix)
 	{
-		updateTransform();
+		UpdateTransforms();
 
-		graphics->getRenderTarget()->SetTransform(m_transforms);
+		graphics->getRenderTarget()->SetTransform(m_transforms * cameraMatrix);
 
 		graphics->getRenderTarget()->DrawBitmap(m_bitmap.Get(),
-			{ m_position.x - cameraOffset.x,m_position.y - cameraOffset.y,(m_position.x + m_size.width) - cameraOffset.x,(m_position.y + m_size.height)-cameraOffset.y },
+			{ m_position.x ,m_position.y ,(m_position.x + m_size.width) ,(m_position.y + m_size.height) },
 			1.0f,
 			D2D1_BITMAP_INTERPOLATION_MODE::D2D1_BITMAP_INTERPOLATION_MODE_LINEAR,
 			D2D1::RectF(srcRect.x, srcRect.y, srcRect.x + srcRect.w, srcRect.y + srcRect.h));
 
-		graphics->getRenderTarget()->SetTransform(D2D1::Matrix3x2F::Identity());
+//		graphics->getRenderTarget()->SetTransform(D2D1::Matrix3x2F::Identity());
 	}
 
 

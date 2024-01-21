@@ -14,6 +14,7 @@ namespace BINDU
 		std::vector<std::unique_ptr<SceneObject> > m_childs;
 
 		bool			m_isActive{};
+
 		std::string     m_guid{};
 
 	public:
@@ -26,11 +27,11 @@ namespace BINDU
 
 		void			UpdateWithChild(float dt);
 
-		void			DrawWithChild(Graphics* graphics, const Vec2f& cameraOffset);
+		void			DrawWithChild(Graphics* graphics, const D2D1_MATRIX_3X2_F& cameraMatrix);
 
 		void			ProcessAllInput();
 
-		void			UpdateTransforms();
+		virtual	void	UpdateTransforms();
 
 		void			AddChild(std::unique_ptr<SceneObject> sceneObject, const char* guid);
 

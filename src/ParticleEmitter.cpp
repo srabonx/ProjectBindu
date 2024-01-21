@@ -62,7 +62,7 @@ namespace BINDU
 		m_currentAlive = currentAlive;
 	}
 
-	void ParticleEmitter::Draw(Graphics* graphics, const Vec2f& cameraOffset)
+	void ParticleEmitter::Draw(Graphics* graphics, const D2D1_MATRIX_3X2_F& cameraMatrix)
 	{
 		if (m_currentAlive > 0)
 		{
@@ -73,13 +73,13 @@ namespace BINDU
 				else
 					continue;
 			} */
-			m_spriteBatch.Draw(graphics,cameraOffset);
+			m_spriteBatch.Draw(graphics,cameraMatrix);
 		}
 	}
 
 	void ParticleEmitter::Add()
 	{
-		float PI_OV_180 = static_cast<float> (3.14159265f / 180.f);
+		const float PI_OV_180 = (3.14159265f / 180.f);
 
 		Particle& particle = m_particlePool[m_index];
 
