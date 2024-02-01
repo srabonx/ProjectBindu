@@ -1,4 +1,6 @@
-#include "Include/Bindu.h"
+#include "Include/Input.h"
+
+#include <cstdint>
 #include <windowsx.h>
 
 namespace BINDU

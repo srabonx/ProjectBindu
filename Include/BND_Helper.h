@@ -1,9 +1,6 @@
 #ifndef BND_HELPER_H
 #define BND_HELPER_H
-
-#include "Bindu.h"
-
-#pragma once
+#include <d2d1.h>
 
 namespace BINDU
 {

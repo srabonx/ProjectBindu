@@ -1,14 +1,51 @@
 
-#include "Include/Bindu.h"
+#include "Include/Scene.h"
+
+#include <locale>
+#include <sstream>
+
+#include "Include/BitmapLoader.h"
+#include "Include/TileLayer.h"
 
 namespace BINDU
 {
+	void Scene::onLoadResource()
+	{
+		for(auto& m:m_tileSets)
+		{
+
+			std::wostringstream wstm;
+
+			const std::ctype<wchar_t>& ctfacet = std::use_facet<std::ctype<wchar_t>>(wstm.getloc());
+
+			for (const char i : m->source)
+				wstm << ctfacet.widen(i);
+
+			m->tileTexture.LoadFromFile(m->source.c_str());
+		}
+
+		for(auto& m:m_layers)
+		{
+			if (TileLayer* layer = dynamic_cast<TileLayer*>(m.get()))
+			{
+				layer->setWorldTileWidth(m_wTileWidth);
+				layer->setWorldTileHeight(m_wTileHeight);
+				layer->onLoadResource();
+			}
+		}
+
+
+	}
+
 	void Scene::Update(float dt) const
 	{
 		for(const auto& m: m_layers)
 		{
 			if (m->isActive())
+			{
 				m->Update(dt);
+				m->CheckCollision();
+			}
 		}
 	}
 
@@ -17,7 +54,9 @@ namespace BINDU
 		for (const auto& m : m_layers)
 		{
 			if (m->isActive())
-				m->Draw(graphics,cameraMatrix);
+			{
+				m->Draw(graphics, cameraMatrix);
+			}
 		}
 	}
 

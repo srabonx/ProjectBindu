@@ -1,5 +1,7 @@
 #pragma once
+#include <d3d11.h>
 #include <exception>
+#include <stdio.h>
 
 
 constexpr float PI = 3.14159265f;

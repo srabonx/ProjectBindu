@@ -1,11 +1,18 @@
 
-#include "Include/Bindu.h"
+#include "Include/SceneObject.h"
 
 namespace BINDU
 {
 
 	void SceneObject::UpdateWithChild(float dt)
 	{
+
+			m_collider.x = (m_position.x) + m_colliderOffsetRect.x;
+			m_collider.y = (m_position.y) + m_colliderOffsetRect.y;
+			m_collider.w = (m_size.width) - m_colliderOffsetRect.w;
+			m_collider.h = (m_size.height) - m_colliderOffsetRect.h;
+		
+
 		Update(dt);
 
 		for(const auto& m: m_childs)
@@ -15,6 +22,7 @@ namespace BINDU
 				m->Update(dt);
 			}
 		}
+		
 	}
 
 	void SceneObject::DrawWithChild(Graphics* graphics, const D2D1_MATRIX_3X2_F& cameraMatrix)
@@ -27,7 +35,8 @@ namespace BINDU
 		{
 			if (m->isActive())
 			{
-				m->Draw(graphics,getTransforms() * cameraMatrix);
+				m->setTranslation(m_position);
+				m->Draw(graphics,getTransform() * cameraMatrix);
 				graphics->getRenderTarget()->SetTransform(D2D1::Matrix3x2F::Identity());
 			}
 		}
@@ -41,17 +50,6 @@ namespace BINDU
 			if (m->isActive())
 				m->ProcessInput();
 		}
-	}
-
-	void SceneObject::UpdateTransforms()
-	{
-		m_origin = { m_position.x + (m_size.width / 2.f), m_position.y + (m_size.height / 2.f) };
-
-		m_translateMatrix = D2D1::Matrix3x2F::Translation(m_translation.x, m_translation.y);				// TODO: Add functionality?
-		m_rotationMatrix = D2D1::Matrix3x2F::Rotation(m_rotation, m_origin);
-		m_scalingMatrix = D2D1::Matrix3x2F::Scale(m_scale.x, m_scale.y, m_origin);
-
-		m_transforms = m_scalingMatrix * m_rotationMatrix * m_translateMatrix;
 	}
 
 	void SceneObject::AddChild(std::unique_ptr<SceneObject> sceneObject, const char* guid)

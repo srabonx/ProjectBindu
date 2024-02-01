@@ -1,5 +1,6 @@
-#include "Bindu.h"
 #pragma once
+#include "SceneObject.h"
+#include "Texture.h"
 
 namespace BINDU
 {
@@ -9,60 +10,30 @@ namespace BINDU
 
 	private:
 
-		enum CollisionType
-		{
-			COLLISION_RECT,
-			COLLISION_CIRC,
-			COLLISION_NONE,
-		};
+		D2D1_RECT_F		m_srcRect{};
 
-	private:
+		float			m_opacity{1};
 
-		bool							   m_collideable;
-
-		CollisionType					   m_collisionType;
-
-
-		bool							   m_doesScale{ false };
-		Timer							   m_scaleTimer;
-		int                                m_scaleTime{ 0 };
-		float                              m_scaleDelta{ 0.0f };
-		float							   m_minScale{ 0.0f };
-		float                              m_maxScale{ 0.0f };
-
-		bool							   m_doesRotate;
-		Timer							   m_rotationTimer;
-		int								   m_rotationTime;
-		float							   m_rotationDelta;
-
-		
 	public:
 		Sprite();
+		Sprite(const Texture& texture, const Bnd_Rect_F& rect);
+
 		~Sprite() = default;
 
-		bool				LoadSpriteFromFile(const wchar_t* filename) { return LoadFromFile(filename); }
+		void				SetTexture(const Texture& texture);
 
-		virtual void		Update(float dt) override;
-		virtual void		Draw(Graphics* graphics, const D2D1_MATRIX_3X2_F& cameraMatrix) override;
+		void				Update(float dt) override;
+		void				Draw(Graphics* graphics, const D2D1_MATRIX_3X2_F& cameraMatrix) override;
 		void				Draw(Bnd_Rect_F srcRect, Graphics* graphics, const D2D1_MATRIX_3X2_F& cameraMatrix);
 		virtual void		ProcessInput() override
 		{}
-		virtual void UpdateTransforms() override;
 
-		inline void		    doesScale(bool value) { m_doesScale = value; }
-		inline void         setScaleTimer(int ms) { m_scaleTime = ms; }
-		inline void			setScaleDelta(float value) { m_scaleDelta = value; }
-		inline void         setScaleRatio(float min, float max) { m_minScale = min, m_maxScale = max; }
+		void				setRect(const Bnd_Rect_F& rect);
+		Bnd_Rect_F			getRect() const;
 
-		inline void         doesRotate(bool value) { m_doesRotate = value; }    
-		inline void			setRotationTimer(int ms) { m_rotationTime = ms; }
+		inline void			setOpacity(const float opacity) { m_opacity = opacity / 255.f; }
+		inline float		getOpacity() const { return m_opacity * 255; }
 
-		inline bool			isCollidable() const { return m_collideable; }
-		inline void			setCollidable(int value) { m_collideable = value; }
-
-		inline CollisionType getCollisionType() const { return m_collisionType; }
-		inline void			 setCollisionMethod(CollisionType type) { m_collisionType = type; }
-		
 	};// Class
 
 };// Namespace

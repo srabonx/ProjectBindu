@@ -1,5 +1,10 @@
-#include "Include/Bindu.h"
+#include "Include/BitmapLoader.h"
+#include "Include/constants.h"
 
+#include <d2d1_1.h>
+#include <wincodec.h>
+
+#include "Include/Bindu.h"
 
 namespace BINDU
 {

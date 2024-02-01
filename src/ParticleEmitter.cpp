@@ -1,4 +1,6 @@
-#include "Include/Bindu.h"
+#include "Include/ParticleEmitter.h"
+
+#include "Include/Random.h"
 
 namespace BINDU
 {
@@ -49,12 +51,6 @@ namespace BINDU
 
 				m_particlePool[i].Update(dt);
 
-				//D2D1_RECT_F dstRect{};
-				//dstRect.left = m_particlePool[i].position.x;
-				//dstRect.top = m_particlePool[i].position.y;
-				//dstRect.right = m_particlePool[i].position.x + m_particlePool[i].size.x;
-				//dstRect.bottom = m_particlePool[i].position.y + m_particlePool[i].size.y;
-
 				m_spriteBatch.UpdateSprite(i,1,&m_particlePool[i].dstRect,nullptr, m_particlePool[i].startColor, m_particlePool[i].startScale, m_particlePool[i].rotation);
 				
 			}
@@ -66,13 +62,6 @@ namespace BINDU
 	{
 		if (m_currentAlive > 0)
 		{
-/*			for (int i = 0; i < m_particlePool.size(); i++)
-			{
-				if (m_particlePool[i].isAlive)
-					SpriteBatch::DrawSelected(i);
-				else
-					continue;
-			} */
 			m_spriteBatch.Draw(graphics,cameraMatrix);
 		}
 	}
@@ -138,13 +127,6 @@ namespace BINDU
 		particle.isAlive = true;
 		particle.fadeOut = m_particleProps.fadeOut;
 
-
-		//D2D1_RECT_F dstRect{};
-		//dstRect.left = m_position.x;
-		//dstRect.top = m_position.y;
-		//dstRect.right = m_position.x + particle.size.x;
-		//dstRect.bottom = m_position.y + particle.size.y;
-
 		// Set linear velocity
 		float vx = static_cast<float> (cos(RandomNumber::Get(m_sprayDirection, m_sprayDirection + m_spread) * PI_OV_180));
 		float vy = static_cast<float> (sin(RandomNumber::Get(m_sprayDirection, m_sprayDirection + m_spread) * PI_OV_180));
@@ -163,19 +145,15 @@ namespace BINDU
 		if (m_currentAlive > m_maxParticles)
 			m_currentAlive = m_maxParticles;
 
-//		++m_currentParticles;
-
-//		if (m_currentParticles > m_maxParticles)
-//			m_currentParticles = m_maxParticles;
 
 		if (m_index == 0)
 			m_index = m_maxParticles - 1;
 
 	}
 
-	void ParticleEmitter::LoadParticleSprite(const wchar_t* filename)
+	void ParticleEmitter::SetTexture(const Texture& texture)
 	{
-		m_spriteBatch.LoadSpriteSheet(filename);
+		SetBitmap(texture.getBitmap());
 	}
 
 	void ParticleEmitter::Generate()

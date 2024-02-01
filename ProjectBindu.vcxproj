@@ -30,13 +30,18 @@
     <ClCompile Include="src\Graphics.cpp" />
     <ClCompile Include="src\Input.cpp" />
     <ClCompile Include="src\Layer.cpp" />
+    <ClCompile Include="src\MapParser.cpp" />
     <ClCompile Include="src\ParticleEmitter.cpp" />
     <ClCompile Include="src\Scene.cpp" />
     <ClCompile Include="src\SceneManager.cpp" />
     <ClCompile Include="src\SceneObject.cpp" />
     <ClCompile Include="src\SpriteBatch.cpp" />
     <ClCompile Include="src\Sprite.cpp" />
+    <ClCompile Include="src\TileLayer.cpp" />
+    <ClCompile Include="src\tinyxml2.cpp" />
+    <ClCompile Include="src\Transformable.cpp" />
     <ClCompile Include="src\winmain.cpp" />
+    <ClCompile Include="src\Texture.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Include\Animator.h" />
@@ -54,6 +59,7 @@
     <ClInclude Include="Include\initConsole.h" />
     <ClInclude Include="Include\Input.h" />
     <ClInclude Include="Include\Layer.h" />
+    <ClInclude Include="Include\MapParser.h" />
     <ClInclude Include="Include\ParticleEmitter.h" />
     <ClInclude Include="Include\Random.h" />
     <ClInclude Include="Include\Range.h" />
@@ -62,8 +68,13 @@
     <ClInclude Include="Include\SceneObject.h" />
     <ClInclude Include="Include\Sprite.h" />
     <ClInclude Include="Include\SpriteBatch.h" />
+    <ClInclude Include="Include\StrConverter.h" />
+    <ClInclude Include="Include\TileLayer.h" />
     <ClInclude Include="Include\TImer.h" />
+    <ClInclude Include="Include\tinyxml2.h" />
+    <ClInclude Include="Include\Transformable.h" />
     <ClInclude Include="Include\Vector.h" />
+    <ClInclude Include="Include\Texture.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>

@@ -1,4 +1,8 @@
-#include "Include/Bindu.h"
+#include "Include/Graphics.h"
+
+#include <iterator>
+
+#include "Include/constants.h"
 
 namespace BINDU {
 	Graphics::Graphics(const HWND& hWnd) :m_windowHandle(hWnd)

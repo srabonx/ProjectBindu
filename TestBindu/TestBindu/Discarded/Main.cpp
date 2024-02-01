@@ -142,6 +142,8 @@ public:
 		emitter2->onLoop(true);
 
 		emitter2->setActive(true);
+		emitter2->setColliderOffset(0, 0, 0, 0);
+		emitter2->setCollideAble(true);
 
 		m_sprite = std::make_unique<Sprite>();
 
@@ -165,23 +167,29 @@ public:
 		m_player->setPosition(200, 100);
 		m_player->setRotation(0);
 		m_player->setActive(true);
+		m_player->setColliderOffset(40, 20, 100, 35);
+		m_player->setCollideAble(true);
 
 		sprite2->LoadSpriteFromFile(L"Resource/Bindu.png");
 
 		sprite2->setPosition(50, 50);
 		sprite2->setSize(60, 60);
 		sprite2->setActive(true);
+		
+		sprite2->setCollidable(true);
+
+		m_sprite->setCollidable(false);
 
 
-		m_player->AddChild(std::move(sprite2), "sprite2");
 
 		backgroundLayer->AddObject(std::move(m_sprite), "bgimage");
 		backgroundLayer->setActive(true);
 		//foregroundLayer->AddObject(std::move(m_sprite), "bdimage");
 		foregroundLayer->AddObject(std::move(m_player), "mainPlayer");
+		foregroundLayer->AddObject(std::move(sprite2), "sprite2");
 		foregroundLayer->AddObject(std::move(emitter2), "emitter2");
 		foregroundLayer->setActive(true);
-
+		foregroundLayer->showDebug(true);
 		backgroundLayer->setParallaxFactor({ 0.5f, 0.5f });
 
 		m_scene->AddLayer(std::move(backgroundLayer), "backgroundLayer");
@@ -223,7 +231,7 @@ public:
 
 			float angle = mousePos.Angle(emitterPos);
 
-			ParticleEmitter* temp = reinterpret_cast<ParticleEmitter*> (m_sceneManager.getScene("firstScene")->getLayer("foregroundLayer")->getObject("emitter2"));
+			ParticleEmitter* temp = dynamic_cast<ParticleEmitter*> (m_sceneManager.getScene("firstScene")->getLayer("foregroundLayer")->getObject("emitter2"));
 			temp->setDirection(angle);
 			std::cout << angle << std::endl;
 		}
@@ -269,6 +277,7 @@ public:
 	//	emitter2.Draw(graphics,m_camera.getCameraMatrix());
 
 
+		m_font.PrintText(500, 500, std::to_string(m_camera.getCameraMatrix().dx), { 255,255,255,255 }, 1);
 		m_font.PrintText(20, 10, "Real: " + std::to_string(g_engine->getRealFrameRate()), { 255,255,255,255 },1);
 		m_font.PrintText(20, 30, "Core: " + std::to_string(g_engine->getCoreFrameRate()), { 255,255,255,255 }, 1);
 
@@ -276,6 +285,24 @@ public:
 
 
 		//m_font.PrintText(500, 400, std::to_string(tempPlayer->getPosition().x), { 255,255,255,255 },1);
+
+	}
+
+	void checkCollision(SceneObject* a,SceneObject* b)
+	{
+
+		if(Player* pA = dynamic_cast<Player*>(a))
+		{
+			if (Sprite* pB = dynamic_cast<Sprite*>(b))
+			{
+				pB->setPosition(pA->getPosition().x + 144, pB->getPosition().y);
+			}
+			if(ParticleEmitter * pB = dynamic_cast<ParticleEmitter*> (b))
+			{
+				pB->setPosition(pA->getPosition().x + 144, pB->getPosition().y);
+			}
+			
+		}		
 
 	}
 };
@@ -315,6 +342,12 @@ public:
 	{
 		game->ProcessInput();
 	}
+
+	void BINDU::game_collision(SceneObject* a, SceneObject* b)
+	{
+		game->checkCollision(a, b);
+	}
+ 
 
 
 

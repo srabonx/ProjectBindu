@@ -34,6 +34,7 @@ private:
 	MoveSet moves;
 	BINDU::Vec2f m_velocity{};
 	BINDU::Bnd_Rect_F m_srcRect{};
+	float offset{ 1 };
 public:
 	Player();
 	~Player();

@@ -1,15 +1,16 @@
 #ifndef FONT_H
 #define FONT_H
+#include <d2d1.h>
 
-#include "Bindu.h"
-
-#pragma once
+#include "Graphics.h"
+#include "SpriteBatch.h"
 
 namespace BINDU
 {
-	class Font final :public Drawable
+	class Font final :private Drawable
 	{
 	private:
+		Texture m_fontTexture;
 		int		m_widths[256]{ };
 
 		SpriteBatch m_spriteBatch;
@@ -23,12 +24,9 @@ namespace BINDU
 
 		void Init();
 
-		void PrintText(int x, int y, const std::string& text, const BND_COLOR& color, float scale);
+		void PrintText(int x, int y, const std::string& text, const BND_COLOR& color = { 255,255,255,255 }, float scale = 1);
 
-		virtual void Draw(Graphics* graphics, const D2D1_MATRIX_3X2_F& cameraMatrix) override
-		{
-			
-		}
+		void Draw(Graphics* graphics, const D2D1_MATRIX_3X2_F& cameraMatrix) override;
 
 		inline void setCharWidth(const float width)
 		{
@@ -46,7 +44,7 @@ namespace BINDU
 		}
 
 		bool LoadWidthData(const char* filename);
-		bool LoadBitmapFont(const wchar_t* filename);
+		bool LoadBitmapFont(const char* filename);
 
 	};
 

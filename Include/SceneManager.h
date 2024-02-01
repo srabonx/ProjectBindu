@@ -1,7 +1,7 @@
 #ifndef SCENEMANAGER_H
 #define SCENEMANAGER_H
 
-#include "Bindu.h"
+#include "Scene.h"
 
 namespace BINDU
 {

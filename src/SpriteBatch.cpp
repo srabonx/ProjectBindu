@@ -1,4 +1,9 @@
+#include "Include/SpriteBatch.h"
+
+#include <intsafe.h>
+
 #include "Include/Bindu.h"
+#include "Include/constants.h"
 
 namespace BINDU
 {
@@ -30,9 +35,9 @@ namespace BINDU
 
 	}
 
-	void SpriteBatch::LoadSpriteSheet(const wchar_t* filename)
+	void SpriteBatch::SetTexture(const Texture& texture)
 	{
-		LoadFromFile(filename);
+		SetBitmap(texture.getBitmap());
 	}
 
 	void SpriteBatch::AddSprite( const Bnd_Rect_F& dstRect,const Bnd_Rect* srcRect, const BND_COLOR& color, float scale , float rotation)
@@ -63,20 +68,20 @@ namespace BINDU
 		{
 			lSrcRect.left = 0;
 			lSrcRect.top = 0;
-			lSrcRect.right = m_bitmapSize.width;
-			lSrcRect.bottom = m_bitmapSize.height;
+			lSrcRect.right = static_cast<UINT32>(m_bitmapSize.width);
+			lSrcRect.bottom = static_cast<UINT32>(m_bitmapSize.height);
 		}
 
 		m_origin = { lDstRect.left + ((lDstRect.right - lDstRect.left) / 2.f), lDstRect.top + ((lDstRect.right - lDstRect.left) / 2.f) };
 
 
-		m_rotationMatrix = D2D1::Matrix3x2F::Rotation(rotation,m_origin);
-		m_scalingMatrix = D2D1::Matrix3x2F::Scale(scale, scale, m_origin);
+		const D2D1_MATRIX_3X2_F rotationM = D2D1::Matrix3x2F::Rotation(rotation,m_origin);
+		const D2D1_MATRIX_3X2_F scaleM = D2D1::Matrix3x2F::Scale(scale, scale, m_origin);
 
-		m_transforms = m_scalingMatrix * m_rotationMatrix;
+		const D2D1_MATRIX_3X2_F transform = scaleM * rotationM * m_cameraTransform;
 
 		DX::ThrowIfFailed(
-			m_spriteBatch->AddSprites(1, &lDstRect, &lSrcRect, &lColor, &m_transforms)
+			m_spriteBatch->AddSprites(1, &lDstRect, &lSrcRect, &lColor, &transform)
 		);
 	
 	}
@@ -89,20 +94,6 @@ namespace BINDU
 		lColor.g = (newColor.g * m_coEff);
 		lColor.b = (newColor.b * m_coEff);
 		lColor.a = (newColor.a * m_coEff);
-
-//		D2D1_RECT_F ldstRect{};
-
-//		m_spriteBatch->GetSprites(index, 1, &ldstRect,nullptr,nullptr,nullptr);
-
-//		D2D1_RECT_F dstRect{};
-
-/*		dstRect.left = newPosition.x;
-		dstRect.top = newPosition.y;
-		dstRect.right = newPosition.x + (ldstRect.right - ldstRect.left);
-		dstRect.bottom = newPosition.y + (ldstRect.bottom - ldstRect.top); */
-
-//		ldstRect = dstRect;
-
 
 		D2D1_RECT_F lDstRect{};
 
@@ -126,15 +117,14 @@ namespace BINDU
 
 
 		m_origin = { lDstRect.left + ((lDstRect.right - lDstRect.left) / 2.f), lDstRect.top + ((lDstRect.right - lDstRect.left) / 2.f) };
-		m_rotationMatrix = D2D1::Matrix3x2F::Rotation(newRotation, m_origin);
-		m_scalingMatrix = D2D1::Matrix3x2F::Scale(newScale, newScale, m_origin);
 
-		m_transforms = m_scalingMatrix * m_rotationMatrix * m_cameraTransform;
+		const D2D1_MATRIX_3X2_F rotationM = D2D1::Matrix3x2F::Rotation(newRotation, m_origin);
+		const D2D1_MATRIX_3X2_F scaleM = D2D1::Matrix3x2F::Scale(newScale, newScale, m_origin);
 
-//		setTransforms(m_transforms * m_cameraTransform);
+		const D2D1_MATRIX_3X2_F transform = scaleM * rotationM * m_cameraTransform;
 
 		DX::ThrowIfFailed(
-			m_spriteBatch->SetSprites(index, 1, &lDstRect, lSrcRect, &lColor, &m_transforms)
+			m_spriteBatch->SetSprites(index, 1, &lDstRect, lSrcRect, &lColor, &transform)
 		);
 
 	}
@@ -157,6 +147,7 @@ namespace BINDU
 
 	void SpriteBatch::Draw(Graphics* graphics, const D2D1_MATRIX_3X2_F& cameraMatrix, int index, int count)
 	{
+		UpdateTransform();
 		m_cameraTransform = cameraMatrix;
 		m_deviceContext->DrawSpriteBatch(m_spriteBatch.Get(), index, count, m_bitmap.Get());
 	}
@@ -168,6 +159,7 @@ namespace BINDU
 
 	void SpriteBatch::Draw(Graphics* graphics, const D2D1_MATRIX_3X2_F& cameraMatrix)
 	{
+		UpdateTransform();
 		m_cameraTransform = cameraMatrix;
 		m_deviceContext->DrawSpriteBatch(m_spriteBatch.Get(), m_bitmap.Get());
 	}

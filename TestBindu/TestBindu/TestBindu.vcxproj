@@ -19,11 +19,18 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Main.cpp" />
-    <ClCompile Include="Player.cpp" />
+    <ClCompile Include="BrickBreaker\Main.cpp" />
+    <ClCompile Include="BrickBreaker\GameManager.cpp" />
+    <ClCompile Include="BrickBreaker\MainScene.cpp" />
+    <ClCompile Include="BrickBreaker\Paddle.cpp" />
+    <ClCompile Include="LevelManager.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Player.h" />
+    <ClInclude Include="BrickBreaker\Constants.h" />
+    <ClInclude Include="BrickBreaker\GameManager.h" />
+    <ClInclude Include="BrickBreaker\MainScene.h" />
+    <ClInclude Include="BrickBreaker\Paddle.h" />
+    <ClInclude Include="LevelManager.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>

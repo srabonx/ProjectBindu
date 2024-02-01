@@ -1,7 +1,11 @@
 #ifndef ANIMATOR_H
 #define ANIMATOR_H
+#include <map>
+#include <string>
 
-#include "Bindu.h"
+#include "BND_Helper.h"
+#include "TImer.h"
+#include "Vector.h"
 
 namespace BINDU
 {
@@ -54,7 +58,7 @@ namespace BINDU
 		inline int			getTotalColumn() const { return m_totalColumn; }
 
 		inline void			setCurrentFrame(int frame) { m_currentFrame = frame; }
-		inline int			getCurrentFrame() const { return m_currentFrame; }
+		Bnd_Rect_F			getCurrentFrame() const;
 
 		inline void			setCurrentRow(int row) { m_currentRow = row; }
 		inline int			getCurrentRow() const { return m_currentRow; }
@@ -62,6 +66,8 @@ namespace BINDU
 		inline void			setFrameTime(int ms) { m_frameTimeMs = ms; }
 
 		void				setAnimation(const char* animation);
+
+		Bnd_Rect_F			getFrame(const int row, const int column) const;
 		
 
 	};

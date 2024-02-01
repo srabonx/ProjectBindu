@@ -1,10 +1,11 @@
-#include "Bindu.h"
 #pragma once
+#include "SceneObject.h"
+#include "Texture.h"
 
 
 namespace BINDU
 {
-	class SpriteBatch : public SceneObject
+	class SpriteBatch : private SceneObject
 	{
 	private:
 		ComPtr<ID2D1SpriteBatch>		m_spriteBatch;
@@ -25,7 +26,7 @@ namespace BINDU
 
 		void 						Init();
 
-		void						LoadSpriteSheet(const wchar_t* filename);
+		void						SetTexture(const Texture& texture);
 
 		void                        AddSprite(const Bnd_Rect_F& dstRect,const Bnd_Rect* srcRect, const BND_COLOR& color, float scale = 1, float rotation = 0);
 
@@ -33,11 +34,11 @@ namespace BINDU
 
 		void						BatchAdd(int count, const Bnd_Rect_F& dstRect);
 
-		inline int					getSpriteCount() const { return m_spriteBatch->GetSpriteCount(); }
+		inline int					getSpriteCount() const { return static_cast<int>(m_spriteBatch->GetSpriteCount()); }
 
 		void						Clear() const;
 
-		virtual void			    Draw(Graphics* graphics, const D2D1_MATRIX_3X2_F& cameraMatrix) override;
+		void						Draw(Graphics* graphics, const D2D1_MATRIX_3X2_F& cameraMatrix) override;
 		void						Draw(Graphics* graphics, const D2D1_MATRIX_3X2_F& cameraMatrix, int index, int count = 1);
 
 		virtual void				Update(float dt) override;

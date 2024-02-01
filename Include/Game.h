@@ -1,4 +1,3 @@
-#include "Bindu.h"
 #pragma once
 
 namespace BINDU {

@@ -1,8 +1,10 @@
 #ifndef CAMERA_H
 #define CAMERA_H
 
-#include "Bindu.h"
-#include "BND_Helper.h"
+#include <d2d1.h>
+
+#include "SceneObject.h"
+#include "Vector.h"
 
 namespace BINDU
 {
@@ -23,15 +25,11 @@ namespace BINDU
 		Camera() = default;
 		~Camera() = default;
 
-		void	SetTarget(SceneObject& sceneObject);
+		void	SetTarget(const Vec2f& target);
 
-		void	SetTarget(const Vec2f& target) { m_position = target; }
-
-		void	Update(float dt,const SceneObject& sceneObject);
+		void	Update(float dt,const Vec2f& target);
 
 		inline D2D1_MATRIX_3X2_F getCameraMatrix() const { return m_transformMatrix; }
-
-		inline Vec2f	getOffset() const { return m_offset; }
 
 		inline void		setZoom(float value)
 		{

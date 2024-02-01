@@ -1,13 +1,17 @@
 #ifndef LAYER_H
 #define LAYER_H
+#include <memory>
+#include <string>
+#include <vector>
 
-#include "Bindu.h"
+#include "SceneObject.h"
+#include "Vector.h"
 
 namespace BINDU
 {
 	class Layer
 	{
-	private:
+	protected:
 
 		bool	m_isActive{};
 
@@ -17,14 +21,19 @@ namespace BINDU
 
 		std::vector<std::unique_ptr<SceneObject>> m_objects;
 
+		bool	m_showDebug{false};
+
 	public:
 		
 		Layer() = default;
-		~Layer() = default;
+		Layer(const Layer&) = delete;
+		Layer& operator = (const Layer&) = delete;
+		virtual ~Layer() = default;
 
-		void			Update(float dt) const;
-		void			Draw(Graphics* graphics, const D2D1_MATRIX_3X2_F& cameraMatrix) const;
-		void			ProcessInput() const;
+		virtual void			Update(float dt);
+
+		virtual void			Draw(Graphics* graphics, const D2D1_MATRIX_3X2_F& cameraMatrix) const;
+		virtual void			ProcessInput() const;
 
 		void			AddObject(std::unique_ptr<SceneObject> sceneObject, const char* guid);
 
@@ -44,6 +53,10 @@ namespace BINDU
 
 		inline void		setParallaxFactor(const Vec2f& parallaxFactor) { m_parallaxFactor = parallaxFactor; }
 		inline Vec2f	getParallaxFactor() const { return m_parallaxFactor; }
+
+		void			CheckCollision();
+
+		inline void		showDebug(const bool value) { m_showDebug = value; }
 
 	};
 

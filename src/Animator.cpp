@@ -1,5 +1,7 @@
 
-#include "Include/Bindu.h"
+#include "Include/Animator.h"
+
+#include <fstream>
 
 namespace BINDU
 {
@@ -97,10 +99,10 @@ namespace BINDU
 			if (m_currentFrame >= m_totalFrame)m_currentFrame = 0;
 		}
 
-		if (m_totalFrame > 1 && m_totalColumn > 1)
+		if (m_totalFrame > 1 && m_totalColumn > 0)
 		{
 			fx = static_cast<float>(m_currentFrame % m_totalColumn) * m_frameSize.width;
-			fy = (static_cast<float>(m_currentFrame) / static_cast<float>(m_totalColumn)) * m_frameSize.height;
+			fy = m_currentFrame / m_totalColumn * m_frameSize.height;
 		}
 		else
 		{
@@ -115,9 +117,25 @@ namespace BINDU
 
 	}
 
+	Bnd_Rect_F Animator::getCurrentFrame() const
+	{
+		float fx = static_cast<float>((m_currentFrame - 1) % m_totalColumn) * m_frameSize.width;
+		float fy = (m_currentFrame - 1) / m_totalColumn * m_frameSize.height;
+
+		return{ fx,fy,m_frameSize.width,m_frameSize.height };
+	}
+
 	void Animator::setAnimation(const char* animation)
 	{
 		m_currentRow = m_animationMap[animation].m_index;
 		m_totalFrame = m_animationMap[animation].m_frameCount;
+	}
+
+	Bnd_Rect_F Animator::getFrame(const int row, const int column) const
+	{
+		float fx = std::round((static_cast<float>(column - 1) * m_frameSize.width));
+		float fy = std::round((static_cast<float>(row - 1) * m_frameSize.height));
+
+		return { fx,fy,m_frameSize.width,m_frameSize.height };
 	}
 };

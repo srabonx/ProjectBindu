@@ -29,29 +29,37 @@
 #include <map>
 #include <vector>
 
+#include "Graphics.h"
+#include "SceneObject.h"
+
 using namespace Microsoft::WRL;
 
-#include "Range.h"
-#include "Random.h"
-#include "Graphics.h"
-#include "constants.h"
-#include "Game.h"
-#include "Vector.h"
+//#include "Range.h"
+//#include "Random.h"
+//#include "Graphics.h"
+//#include "constants.h"
+//#include "Game.h"
+//#include "Vector.h"
+//#include "TImer.h"
+//#include "Input.h"
+//#include "BitmapLoader.h"
+//#include "SceneObject.h"
+//#include "Layer.h"
+////#include "TileLayer.h"
+//#include "Scene.h"
+//#include "SceneManager.h"
+//#include "Drawable.h"
+//#include "Entity.h"
+//#include "Sprite.h"
+//#include "SpriteBatch.h"
+//#include "ParticleEmitter.h"
+//#include "Font.h"
+//#include "Camera.h"
+////#include "Animator.h"
+//#include "MapParser.h"
+
 #include "TImer.h"
-#include "Input.h"
-#include "BitmapLoader.h"
-#include "SceneObject.h"
-#include "Layer.h"
-#include "Scene.h"
-#include "SceneManager.h"
-#include "Drawable.h"
-#include "Entity.h"
-#include "Sprite.h"
-#include "SpriteBatch.h"
-#include "ParticleEmitter.h"
-#include "Font.h"
-#include "Camera.h"
-#include "Animator.h"
+
 
 
 
@@ -76,6 +84,7 @@ namespace BINDU {
 	extern void game_end();
 	extern void game_render2d(Graphics* graphics);
 	extern void game_processInputs();
+	extern void game_collision(SceneObject* a, SceneObject* b);
 
 	struct EngineProperties
 	{

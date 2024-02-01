@@ -27,6 +27,8 @@ void Player::Update(float dt)
 {
 	m_animator.Animate(m_srcRect);
 	m_sprite.setY(m_position.y);
+
+
 	switch (moves)
 	{
 	case LEFT:

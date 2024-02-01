@@ -1,5 +1,7 @@
-#include "Bindu.h"
 #pragma once
+#include <d2d1helper.h>
+
+#include "Vector.h"
 
 using namespace BINDU;
 #define E_INSTANCE Engine::GetInstance()

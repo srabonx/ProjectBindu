@@ -1,4 +1,3 @@
-#include "Bindu.h"
 #pragma once
 
 #define BINDU_MAX_KEYS 26
@@ -36,6 +35,8 @@
 #define BND_BTN_RIGHT 2
 #define BND_BTN_X1 3
 #define BND_BTN_X2 4
+#include <cstdint>
+#include <Windows.h>
 
 namespace BINDU {
 

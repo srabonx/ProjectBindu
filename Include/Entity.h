@@ -1,47 +1,44 @@
+#ifndef ENTITY_H
+#define ENTITY_H
+
 #include "Bindu.h"
-#pragma once
+
 
 namespace BINDU
 {
 	class Entity
 	{
 	protected:
-		
-		int id;
-		const char* name;
-		bool visible;
-		bool alive;
-		int objectType;
-		int lifeTimeLength;
-		Timer lifeTimeTimer;
+
+		std::string m_guid{};
+
+		bool		m_isActive{true};
+		bool		m_isAlive{ true };
+
+		int			m_lifeTimeLength{};
+		Timer		m_lifeTimeTimer;
 		
 	public:
 
 		Entity();
-		virtual ~Entity() {}
+		virtual ~Entity() = default;
 
 		virtual void Update(float dt) = 0;
-		virtual void Animate() = 0;
-		virtual void Draw(Graphics* graphics, const D2D1_MATRIX_3X2_F& cameraMatrix) = 0;
 
-		inline void setID(int value) { id = value; }
-		inline int getId() const { return id; }
-		inline const char* getName() { return name; }
-		inline void setName(const char* value) { name = value; }
-		inline bool getVisible() const { return visible; }
-		inline void setVisible(bool value) { visible = value; }
-		inline bool getAlive() const { return alive; }
-		inline void setAlive(bool value) { alive = value; }
-		inline int getLifeTime() const { return lifeTimeLength; }
-		inline void setLifeTime(int millisecond) {
-			lifeTimeLength = millisecond;
-			lifeTimeTimer.resetStopwatch();
-		}
-		inline bool lifeTimeExpired() {
-			return lifeTimeTimer.stopwatch(lifeTimeLength);
-		}
-		inline int getObjectType() const { return objectType; }
-		inline void setObjectType(int value) { objectType = value; }
+		inline void  setGuid(const char* guid) { m_guid = guid; }
+		inline std::string getGuid() const { return m_guid; }
+
+		inline void  setAlive(const bool value) { m_isAlive = value; }
+		inline bool	 isAlive() const { return m_isAlive; }
+
+		inline void		setActive(const bool value) { m_isActive = value; }
+
+		inline bool		isActive() const { return m_isActive; }
+
+		inline void		setLifetime(const int value) { m_lifeTimeLength = value; }
+
+		inline int		getLifetime() const { return m_lifeTimeLength; }
 
 	};
 };// Namespace
+#endif // ENTITY_H

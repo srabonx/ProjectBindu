@@ -1,5 +1,9 @@
-#include "Bindu.h"
 #pragma once
+#include "Graphics.h"
+#include "Range.h"
+#include "SpriteBatch.h"
+#include "TImer.h"
+#include "Vector.h"
 
 namespace BINDU
 {
@@ -24,7 +28,7 @@ namespace BINDU
 
 		iRange		colorOpacityRange{ 0,0 };
 
-		float			minTimetoChangeColor{ 0 };								// in seconds
+		float		minTimetoChangeColor{ 0 };								// in seconds
 
 		bool		fadeOut{ false };
 
@@ -98,14 +102,14 @@ namespace BINDU
 
 		void			Init(const ParticleProps& particleProps);
 
-		virtual void	Update(float dt);
+		void			Update(float dt) override;
 		virtual void	Draw(Graphics* graphics, const D2D1_MATRIX_3X2_F& cameraMatrix) override;
 		virtual void	ProcessInput() override
 		{
 			
 		}
 
-		void			LoadParticleSprite(const wchar_t* filename);
+		void			SetTexture(const Texture& texture);
 
 		void			Generate();
 

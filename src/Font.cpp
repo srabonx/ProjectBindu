@@ -1,5 +1,7 @@
 
-#include "Include/Bindu.h"
+#include "Include/Font.h"
+
+#include <fstream>
 
 namespace BINDU
 {
@@ -18,16 +20,23 @@ namespace BINDU
 		const float fx = static_cast<float> (x);
 		const float fy = static_cast<float> (y);
 
+//		m_spriteBatch.Clear();
+
 		for( unsigned int i = 0 ; i < text.size(); i++)
 		{
 			const int frame = static_cast<unsigned char>(text[i]);
 
 			Bnd_Rect_F dstRect{};
 
-			dstRect.x = fx + ( m_charSize.width * scale) * i;
+			if (m_widths[frame] == 0) m_widths[frame] = static_cast<int>(m_charSize.width);
+
+			dstRect.x = fx + (static_cast<float>(m_widths[frame]) * scale) * i;
 			dstRect.y = fy * scale;
-			dstRect.w = m_charSize.width;
+			dstRect.w = static_cast<float>(m_widths[frame]);
 			dstRect.h = m_charSize.height;
+
+			
+
 
 			Bnd_Rect srcRect = {};
 
@@ -43,19 +52,41 @@ namespace BINDU
 			m_spriteBatch.AddSprite(dstRect, &srcRect, color,scale);
 			
 		}
-		m_spriteBatch.Draw(nullptr,D2D1::Matrix3x2F::Identity());
+	}
+
+	void Font::Draw(Graphics* graphics, const D2D1_MATRIX_3X2_F& cameraMatrix)
+	{
+		m_spriteBatch.Draw(graphics, cameraMatrix);
 		m_spriteBatch.Clear();
 	}
 
 	bool Font::LoadWidthData(const char* filename)
 	{
+		unsigned char buffer[512];
+
+		std::ifstream infile;
+
+		infile.open(filename, std::ios::binary);
+
+		if (!infile) return false;
+
+		// Read 512 byte, 2 byte per character
+		infile.read(reinterpret_cast<char *>(&buffer), 512);
+
+		if (infile.bad()) return false;
+		infile.close();
+
+		for (int i = 0; i < 256; i++)
+			m_widths[i] = static_cast<int>(buffer[i * 2]);
+		
+
 		return true;
 	}
 
-	bool Font::LoadBitmapFont(const wchar_t* filename)
+	bool Font::LoadBitmapFont(const char* filename)
 	{
-
-		m_spriteBatch.LoadSpriteSheet(filename);
+		m_fontTexture.LoadFromFile(filename);
+		m_spriteBatch.SetTexture(m_fontTexture);
 		return true;
 	}
 };
