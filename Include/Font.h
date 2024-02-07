@@ -18,6 +18,8 @@ namespace BINDU
 		int		m_totalColumn{};
 		Bnd_Size_F m_charSize{};
 
+		Bnd_Size_F m_srcCharSize{};
+
 	public:
 		Font();
 		~Font() = default;

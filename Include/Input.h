@@ -38,6 +38,8 @@
 #include <cstdint>
 #include <Windows.h>
 
+#include "Vector.h"
+
 namespace BINDU {
 
 	struct KeyState														// State of the keyboard keys
@@ -55,15 +57,10 @@ namespace BINDU {
 		bool wasDown, isDown;
 	};
 
-	struct Position														// Mouse position
-	{
-		int x, y;
-	};
-
 	struct MouseInputMap
 	{
 		ButtonState buttons[BINDU_MAX_MOUSE_BUTTONS];
-		Position position;
+		Vec2f position;
 	};
 
 	class Input
@@ -86,7 +83,7 @@ namespace BINDU {
 		static bool isKeyPressed(uint32_t keycode);
 		static bool isKeyReleased(uint32_t keycode);
 		static bool isKeyHold(uint32_t keycode);
-		static Position getMousePosition();
+		static Vec2f getMousePosition();
 		
 		static bool isMouseButtonPressed(uint32_t buttonCode);
 		static bool isMouseButtonReleased(uint32_t buttonCode);

@@ -1,0 +1,8 @@
+frame_width = 144 , frame_height = 80,
+
+idle - index : 0 , frame_count : 8 ;
+running - index : 1 , frame_count : 8;
+walking - index : 2, frame_count : 8;
+dashing - index : 4,frame_count : 7; 
+fire_breath - index : 19, frame_count : 16;
+rolling - index : 5, frame_count : 7;

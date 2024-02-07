@@ -2,6 +2,8 @@
 #define BND_HELPER_H
 #include <d2d1.h>
 
+#include "Vector.h"
+
 namespace BINDU
 {
 	struct Bnd_Rect
@@ -39,7 +41,7 @@ namespace BINDU
 	struct Bnd_Size
 	{
 		Bnd_Size() = default;
-		Bnd_Size(const int width, const int height) :width(width), height(height) {};
+		Bnd_Size(const int width, const int height) :width(width), height(height) {}
 		int width{ 1 };
 		int height{ 1 };
 	};
@@ -47,9 +49,19 @@ namespace BINDU
 	struct Bnd_Size_F
 	{
 		Bnd_Size_F() = default;
-		Bnd_Size_F(const float width, const float height) :width(width), height(height) {};
+		Bnd_Size_F(const float width, const float height) :width(width), height(height) {}
 		float width{ 1 };
 		float height{ 1 };
+	};
+
+
+	struct Bnd_Circle
+	{
+		Bnd_Circle() = default;
+		Bnd_Circle(const Vec2f& center, const float radius) : center(center), radius(radius) {}
+
+		Vec2f center{};
+		float radius{};
 	};
 
 };

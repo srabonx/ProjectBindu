@@ -4,17 +4,29 @@
 #include "Constants.h"
 #include "Font.h"
 #include "MainScene.h"
+#include "MenuScene.h"
 #include "SceneManager.h"
 
-class GameManager: public BINDU::SceneManager
+
+enum class State
+{
+	MENU,
+	GAME
+};
+
+class GameManager
 {
 private:
 
 	BINDU::Bnd_Size		m_worldSize{ TILE_SIZE.x * 25,TILE_SIZE.y * 45 };
 
+	std::unique_ptr<MenuScene>		m_menuScene;
+
 	std::unique_ptr<MainScene>		m_mainScene;
 
-	BINDU::Font			m_font;
+	BINDU::SceneManager		m_sceneManager;
+
+	static State m_state;
 
 public:
 	GameManager() = default;
@@ -30,5 +42,6 @@ public:
 
 	void Draw(BINDU::Graphics* graphics);
 
+	static void SetState(State state) { m_state = state; }
 };
 

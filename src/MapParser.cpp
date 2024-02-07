@@ -19,7 +19,7 @@ namespace BINDU
 
 		doc.LoadFile(filepath);
 
-		assert(!doc.Error());
+		//assert(!doc.Error());
 
 		tinyxml2::XMLElement* root = doc.RootElement();
 
@@ -42,7 +42,10 @@ namespace BINDU
 				scene.AddLayer(ParseLayer(e,&tileSets), e->Attribute("name"));
 		}
 
-		scene.setTileSets(std::move(tileSets));
+		for(auto& m:tileSets)
+		{
+			scene.addTileSet(std::move(m));
+		}
 
 	}
 

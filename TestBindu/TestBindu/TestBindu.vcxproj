@@ -22,6 +22,7 @@
     <ClCompile Include="BrickBreaker\Main.cpp" />
     <ClCompile Include="BrickBreaker\GameManager.cpp" />
     <ClCompile Include="BrickBreaker\MainScene.cpp" />
+    <ClCompile Include="BrickBreaker\MenuScene.cpp" />
     <ClCompile Include="BrickBreaker\Paddle.cpp" />
     <ClCompile Include="LevelManager.cpp" />
   </ItemGroup>
@@ -29,6 +30,7 @@
     <ClInclude Include="BrickBreaker\Constants.h" />
     <ClInclude Include="BrickBreaker\GameManager.h" />
     <ClInclude Include="BrickBreaker\MainScene.h" />
+    <ClInclude Include="BrickBreaker\MenuScene.h" />
     <ClInclude Include="BrickBreaker\Paddle.h" />
     <ClInclude Include="LevelManager.h" />
   </ItemGroup>
@@ -96,13 +98,17 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <IncludePath>C:\DirectXTK\Inc;C:\Users\letsd\visual studio workspace\ProjectBindu\Include;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\DirectXTK\Bin\Desktop_2022_Win10\x64\Debug;C:\Users\letsd\visual studio workspace\ProjectBindu\lib;$(LibraryPath)</LibraryPath>
+    <LibraryPath>C:\DirectXTK\Bin\Desktop_2022_Win10\x64\Debug;C:\Users\letsd\visual studio workspace\ProjectBindu\x64\Debug;$(LibraryPath)</LibraryPath>
     <ExternalIncludePath>C:\Users\letsd\visual studio workspace\ProjectBindu\Include;$(ExternalIncludePath)</ExternalIncludePath>
+    <OutDir>$(ProjectDir)\BrickBreaker\Debug\</OutDir>
+    <IntDir>$(ProjectDir)\BrickBreaker\Debug\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>C:\Users\letsd\visual studio workspace\ProjectBindu\Include;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\Users\letsd\visual studio workspace\ProjectBindu\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\DirectXTK\Inc;C:\Users\letsd\visual studio workspace\ProjectBindu\Include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\DirectXTK\Bin\Desktop_2022_Win10\x64\Release;C:\Users\letsd\visual studio workspace\ProjectBindu\x64\Release;$(LibraryPath)</LibraryPath>
     <ExternalIncludePath>C:\Users\letsd\visual studio workspace\ProjectBindu\Include;$(ExternalIncludePath)</ExternalIncludePath>
+    <OutDir>$(ProjectDir)\BrickBreaker\Release\</OutDir>
+    <IntDir>$(ProjectDir)\BrickBreaker\Release\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -140,11 +146,12 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>Bindu.lib;D2d1.lib;dwrite.lib;D3D11.lib;DXGI.lib;winmm.lib;windowscodecs.lib;DirectXTK.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Bindu.lib;D2d1.lib;dwrite.lib;D3D11.lib;DXGI.lib;winmm.lib;windowscodecs.lib;DirectXTK.lib;user32.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -155,13 +162,14 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>Bindu.lib;D2d1.lib;dwrite.lib;winmm.lib;windowscodecs.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Bindu.lib;D2d1.lib;dwrite.lib;D3D11.lib;DXGI.lib;winmm.lib;windowscodecs.lib;DirectXTK.lib;user32.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

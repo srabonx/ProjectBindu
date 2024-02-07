@@ -147,9 +147,12 @@ namespace BINDU
 
 	void SpriteBatch::Draw(Graphics* graphics, const D2D1_MATRIX_3X2_F& cameraMatrix, int index, int count)
 	{
+		graphics->getRenderTarget()->SetAntialiasMode(D2D1_ANTIALIAS_MODE_ALIASED);
 		UpdateTransform();
 		m_cameraTransform = cameraMatrix;
 		m_deviceContext->DrawSpriteBatch(m_spriteBatch.Get(), index, count, m_bitmap.Get());
+		graphics->getRenderTarget()->SetAntialiasMode(D2D1_ANTIALIAS_MODE_PER_PRIMITIVE);
+
 	}
 
 	void SpriteBatch::Update(float dt)
@@ -159,8 +162,11 @@ namespace BINDU
 
 	void SpriteBatch::Draw(Graphics* graphics, const D2D1_MATRIX_3X2_F& cameraMatrix)
 	{
+		graphics->getRenderTarget()->SetAntialiasMode(D2D1_ANTIALIAS_MODE_ALIASED);
 		UpdateTransform();
 		m_cameraTransform = cameraMatrix;
 		m_deviceContext->DrawSpriteBatch(m_spriteBatch.Get(), m_bitmap.Get());
+		graphics->getRenderTarget()->SetAntialiasMode(D2D1_ANTIALIAS_MODE_PER_PRIMITIVE);
+
 	}
 };// namespace

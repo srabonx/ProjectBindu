@@ -1,6 +1,8 @@
 
 #include "Include/Layer.h"
 
+#include "Include/CollisionHandler.h"
+
 
 namespace BINDU
 {
@@ -9,7 +11,11 @@ namespace BINDU
 		for(const auto& m:m_objects)
 		{
 			if (m->isActive())
+			{
+				m->setTranslation(m_offsetX, m_offsetY);
 				m->UpdateWithChild(dt);
+			}
+				
 		}
 
 	}
@@ -29,7 +35,7 @@ namespace BINDU
 				{
 					m->UpdateTransform();
 					graphics->getRenderTarget()->SetTransform(m->getTransform() * cameraMatrixWithParallax);
-					graphics->getSolidColorBrush()->SetColor(D2D1::ColorF(D2D1::ColorF::Pink));
+					graphics->getSolidColorBrush()->SetColor(D2D1::ColorF(D2D1::ColorF::Red));
 					graphics->getRenderTarget()->DrawRectangle({ m->getCollider().x,m->getCollider().y,m->getCollider().x + m->getCollider().w,m->getCollider().y+m->getCollider().h }, graphics->getSolidColorBrush());
 					graphics->getRenderTarget()->SetTransform(D2D1::Matrix3x2F::Identity());
 					graphics->getSolidColorBrush()->SetColor(D2D1::ColorF(D2D1::ColorF::Blue));
@@ -102,21 +108,13 @@ namespace BINDU
 				{
 					if (m->isCollideAble() && m2->isCollideAble())
 					{
-						const float aLeft = m->getCollider().x;
-						const float aRight = m->getCollider().x + m->getCollider().w;
-						const float aBottom = m->getCollider().y + m->getCollider().h;
-						const float aTop = m->getCollider().y;
-
-						const float bLeft = m2->getCollider().x;
-						const float bRight = m2->getCollider().x + m->getCollider().w;
-						const float bBottom = m2->getCollider().y + m->getCollider().h;
-						const float bTop = m2->getCollider().y;
-
-					//	if ((bLeft <= aRight && aLeft <= bRight) && (bTop <= aBottom && aTop <= bBottom))
-						//	game_collision(m.get(), m2.get());
+						if(CollisionHandler::RectVsRect(m->getCollider(), m2->getCollider()))
+						{
+							m->CheckCollision(*m2);
+							m2->CheckCollision(*m);
+						}
 
 					}
-
 				}
 
 			}

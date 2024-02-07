@@ -12,6 +12,7 @@ namespace BINDU {
 		Vector2() :x(0), y(0) {}											// Default constructor
 		Vector2(T x, T y) :x(x), y(y) {}									// Parameterized constructor
 		Vector2(const Vector2& vec2) :x(vec2.x), y(vec2.y) {}				// Copy constructor
+		Vector2& operator = (const Vector2& v) = default;
 
 		inline void setX(T x) { this->x = x; }
 		inline T getX() const { return x; }
@@ -24,9 +25,9 @@ namespace BINDU {
 			return sqrt((vec.x - x) * (vec.x - x) + (vec.y - y) * (vec.y - y));
 		}
 
-		inline float Length()
+		inline float Length() const
 		{
-			return sqrt(x * x + y * y);
+			return static_cast<float>(sqrt(x * x + y * y));
 		}
 
 		inline Vector2& Normalize()
@@ -36,9 +37,10 @@ namespace BINDU {
 			return (*this);
 		}
 
-		inline Vector2& Normal()
+		inline Vector2 Normal()
 		{
-			return ((*this) / Length());
+			T r = 1 / Length();
+			return Vector2(x * r, y * r);
 		}
 
 		inline T Dot(const Vector2& vec2)
@@ -53,9 +55,14 @@ namespace BINDU {
 			return degree;
 		}
 
-		inline Vector2 operator + (const Vector2& rhs)
+		inline Vector2 operator + (const Vector2& rhs) const
 		{
 			return Vector2(x + rhs.x, y + rhs.y);
+		}
+
+		inline Vector2 operator + (const T& rhs) const
+		{
+			return Vector2(x + rhs, y + rhs);
 		}
 
 		inline Vector2& operator += (const Vector2& rhs)
@@ -79,7 +86,12 @@ namespace BINDU {
 			return Vector2(-x, -y);
 		}
 
-		inline Vector2 operator - (const Vector2& rhs)
+		inline Vector2 operator - (const T& rhs) const
+		{
+			return Vector2(x - rhs, y - rhs);
+		}
+
+		inline Vector2 operator - (const Vector2& rhs) const
 		{
 			return Vector2(x - rhs.x, y - rhs.y);
 		}
@@ -92,9 +104,27 @@ namespace BINDU {
 			return (*this);
 		}
 
-		inline Vector2 operator * (const Vector2& rhs)
+		Vector2 operator * (const Vector2& rhs)  const
 		{
-			return Vector2(x * rhs.x, y * rhs.y);
+			return Vector2(this->x * rhs.x, this->y * rhs.y);
+		}
+
+		Vector2 operator * (const Vector2& rhs) 
+		{
+			return Vector2(this->x * rhs.x, this->y * rhs.y);
+		}
+
+		Vector2 operator * (const T& rhs) const
+		{
+			return Vector2(this->x * rhs, this->y * rhs);
+		}
+
+		inline Vector2& operator*=(const Vector2& rhs)
+		{
+			x *= rhs.x;
+			y *= rhs.y;
+
+			return(*this);
 		}
 
 		inline Vector2& operator *= (const T rhs)
@@ -105,21 +135,24 @@ namespace BINDU {
 			return (*this);
 		}
 
-		inline Vector2 operator / (const T rhs)
+		inline Vector2 operator / (const T& rhs) const
 		{
-			rhs = 1.0f / rhs;
-
-			return Vector2(x * rhs, y * rhs);
+			return Vector2(x / rhs, y / rhs);
 		}
 
 		inline Vector2& operator /= (const T rhs)
 		{
-			rhs = 1.0f / rhs;
+			float a = 1.0f / rhs;
 
-			x *= rhs;
-			y *= rhs;
+			x *= a;
+			y *= a;
 
 			return (*this);
+		}
+
+		inline Vector2 operator / (const Vector2& rhs) const
+		{
+			return { x / rhs.x , y / rhs.y };
 		}
 
 
@@ -146,7 +179,7 @@ namespace BINDU {
 
 	}; // class
 
-	typedef Vector2<int> Vec2i;
-	typedef Vector2<float> Vec2f;
+	using Vec2i =  Vector2<int>;
+	using Vec2f = Vector2<float>;
 
 };// namespace

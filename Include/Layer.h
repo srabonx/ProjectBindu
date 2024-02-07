@@ -21,6 +21,9 @@ namespace BINDU
 
 		std::vector<std::unique_ptr<SceneObject>> m_objects;
 
+		float		m_offsetX{};
+		float		m_offsetY{};
+
 		bool	m_showDebug{false};
 
 	public:
@@ -55,6 +58,13 @@ namespace BINDU
 		inline Vec2f	getParallaxFactor() const { return m_parallaxFactor; }
 
 		void			CheckCollision();
+
+		inline void		setOffsetX(const float x) { m_offsetX = x; }
+		inline float	getOffsetX() const { return m_offsetX; }
+
+		inline void		setOffsetY(const float y) { m_offsetY = y; }
+		inline float	getOffsetY() const { return m_offsetY; }
+
 
 		inline void		showDebug(const bool value) { m_showDebug = value; }
 

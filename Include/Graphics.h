@@ -9,7 +9,6 @@ using namespace Microsoft::WRL;
 
 namespace BINDU {
 
-
 	struct BND_COLOR
 	{
 		BND_COLOR() :r{ 0.0f }, g{ 0.0f }, b{ 0.0f }, a{ 0.0f }

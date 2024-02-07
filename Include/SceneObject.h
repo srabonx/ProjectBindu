@@ -28,17 +28,16 @@ namespace BINDU
 
 		Bnd_Rect_F		m_colliderOffsetRect{};
 
-		bool			m_colliderAble{};
+		bool			m_collideAble{};
 
 	public:
 
 		SceneObject() = default;
-		//SceneObject(const SceneObject&) = delete;
-		//SceneObject& operator = (const SceneObject&) = delete;
 		virtual ~SceneObject() = default;
 
 		virtual void	Update(float dt) = 0;
 		virtual void	ProcessInput() = 0;
+		virtual void    CheckCollision(const SceneObject& sceneObject){}
 
 		void			UpdateWithChild(float dt);
 
@@ -73,9 +72,9 @@ namespace BINDU
 			m_colliderOffsetRect = { x,y,w,h };
 		}
 
-		inline void		setCollideAble(const bool value) { m_colliderAble = value; }
+		inline void		setCollideAble(const bool value) { m_collideAble = value; }
 
-		inline bool		isCollideAble() const { return m_colliderAble; }
+		inline bool		isCollideAble() const { return m_collideAble; }
 
 
 	};//Class

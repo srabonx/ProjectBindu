@@ -35,5 +35,11 @@ public:
 
 	void    ProcessInput() override;
 
+	void    CheckCollision(const SceneObject& sceneObject) override;
+
+	inline BINDU::Vec2f getVelocity() { return m_velocity; }
+	inline void			setVelocity(const BINDU::Vec2f& velocity) { m_velocity = velocity;}
+
+
 };
 

@@ -9,37 +9,61 @@
 #include "Sprite.h"
 #include <Font.h>
 
-class MainScene
+#include "ParticleEmitter.h"
+
+
+class MainScene:public BINDU::Scene
 {
 private:
 
-	BINDU::Texture						m_bgTexture;
-	BINDU::Texture						m_boundaryTexture;
+	BINDU::Bnd_Circle					m_circle;
+	BINDU::Vec2f						circleVel;
 
-	std::unique_ptr<BINDU::Layer>		m_bgLayer;
-	std::unique_ptr<BINDU::Layer>		m_fgLayer;
 
-	std::unique_ptr<BINDU::Sprite>		m_backgroundImg;
-	std::unique_ptr<BINDU::Sprite>		m_boundaryImg;
+	BINDU::Layer*						m_bgLayer1 = nullptr;
+	BINDU::Layer*						m_bgLayer2 = nullptr;
+	BINDU::Layer*						m_fgLayer = nullptr;
+
+	BINDU::Sprite*						m_backgroundImg = nullptr;
+	BINDU::Sprite*						m_boundaryImg = nullptr;
+
+	BINDU::ParticleEmitter*				m_particleEmitter = nullptr;
 
 	int									m_boundaryImgOffset{ 8 };
 
-	std::unique_ptr<Paddle>				m_paddle;
+	Paddle*								m_paddle  = nullptr;
 
-	std::string							m_levelData;
+	BINDU::TileLayer*					m_tileLayer = nullptr;
 
-	std::vector<std::vector<int>>		m_mapData;
+	BINDU::Vec2f						m_mouseCell{};
+
+	BINDU::Font							m_font;
+
+	BINDU::Camera						m_camera;
+
 	BINDU::MapParser					m_mapParser;
-	std::unique_ptr<BINDU::Scene>		scene;
-	BINDU::TileLayer*					tileLayer = nullptr;
 
-	BINDU::Vec2i						m_mouseCell{};
+	float								m_zoomLevel{1};
 
-	BINDU::Font			m_font;
+	int									m_currentLevel{};
+	int									m_totalLevel{};
 
+	bool								m_switchLevel{ false };
+	bool								m_gameOver{ false };
+	bool								m_pauseMode{ false };
+	bool								m_transitionPhase{ false };
 
-	BINDU::Camera		m_camera;
-	float				m_zoomLevel{};
+	int									m_score{ 0 };
+	int									m_highScore{ 0 };
+
+private:
+
+	void	ResetMap();
+	void	GameComplete();
+	void    SwitchLevel();
+	void    TransitionNext();
+	void    Pause();
+	void	SetParticleEmitter();
 
 public:
 
@@ -50,11 +74,11 @@ public:
 
 	void    onLoadResource(const BINDU::Bnd_Size& windSize);
 
-	void    Update(float dt);
+	void    Update(float dt) override;
 
-	void	Draw(BINDU::Graphics* graphics, const D2D1_MATRIX_3X2_F& cameraMatrix);
+	void	Draw(BINDU::Graphics* graphics, const D2D1_MATRIX_3X2_F& cameraMatrix) override;
 
-	void    ProcessInput();
+	void    ProcessInput() override;
 
 
 

@@ -30,9 +30,9 @@ namespace BINDU
 
 			if (m_widths[frame] == 0) m_widths[frame] = static_cast<int>(m_charSize.width);
 
-			dstRect.x = fx + (static_cast<float>(m_widths[frame]) * scale) * i;
+			dstRect.x = fx + m_charSize.width * scale * i;
 			dstRect.y = fy * scale;
-			dstRect.w = static_cast<float>(m_widths[frame]);
+			dstRect.w = m_charSize.width;
 			dstRect.h = m_charSize.height;
 
 			
@@ -40,14 +40,14 @@ namespace BINDU
 
 			Bnd_Rect srcRect = {};
 
-			const int nx = (frame % m_totalColumn) * 9;
-			const int ny = (frame/m_totalColumn) * 16;
+			const int nx = (frame % m_totalColumn) * static_cast<int>(m_srcCharSize.width);
+			const int ny = (frame/m_totalColumn) * static_cast<int>(m_srcCharSize.height);
 			
 
 			srcRect.x = nx ;
 			srcRect.y = ny ;
-			srcRect.w = 9;//static_cast<unsigned int>(m_charSize.width);
-			srcRect.h = 16;//static_cast<unsigned int>(m_charSize.height);
+			srcRect.w = static_cast<unsigned int>(m_srcCharSize.width);
+			srcRect.h = static_cast<unsigned int>(m_srcCharSize.height);
 
 			m_spriteBatch.AddSprite(dstRect, &srcRect, color,scale);
 			
@@ -87,6 +87,11 @@ namespace BINDU
 	{
 		m_fontTexture.LoadFromFile(filename);
 		m_spriteBatch.SetTexture(m_fontTexture);
+		D2D1_SIZE_F size = m_fontTexture.getBitmap()->GetSize();
+
+		m_srcCharSize.width = size.width / 16.f;
+		m_srcCharSize.height = size.height / 16.f;
+
 		return true;
 	}
 };

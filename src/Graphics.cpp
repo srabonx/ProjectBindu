@@ -129,6 +129,7 @@ namespace BINDU {
 #ifdef _DEBUG
 				pd3d11InfoQueue->SetBreakOnSeverity(D3D11_MESSAGE_SEVERITY_CORRUPTION, true);
 				pd3d11InfoQueue->SetBreakOnSeverity(D3D11_MESSAGE_SEVERITY_ERROR, true);
+				pd3dDebug.As(&m_d3d11Debug);
 #endif
 				D3D11_MESSAGE_ID hide[] =
 				{
@@ -145,7 +146,6 @@ namespace BINDU {
 #endif
 
 		// TODO: Initialize device dependent resources here (independent of window size).
-		pd3dDebug.As(&m_d3d11Debug);
 	}
 
 
@@ -296,7 +296,7 @@ namespace BINDU {
 
 		m_d2d1DeviceContext->SetTarget(pd2d1Bitmap.Get());
 
-		m_d2d1DeviceContext->SetAntialiasMode(D2D1_ANTIALIAS_MODE_ALIASED);
+//		m_d2d1DeviceContext->SetAntialiasMode(D2D1_ANTIALIAS_MODE_ALIASED);
 
 	}
 

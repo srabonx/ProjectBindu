@@ -5,8 +5,8 @@ namespace BINDU
 {
 	void TileLayer::onLoadResource()
 	{
-		for (int i = 0; i < m_height; i++)
-			m_tiles.push_back(std::vector<std::unique_ptr<Tile>>(m_width));
+		//for (int i = 0; i < m_height; i++)
+		//	m_tiles.push_back(std::vector<std::unique_ptr<Tile>>(m_width));
 
 		for (int row = 0; row < m_height; row++)
 		{
@@ -16,7 +16,10 @@ namespace BINDU
 					int tileNum = m_mapData[row][column];
 
 					if (tileNum == 0)
+					{
+						m_tiles.push_back(nullptr);
 						continue;
+					}
 
 					TileSet* tileSet = nullptr;
 
@@ -58,13 +61,17 @@ namespace BINDU
 						tile->size = { static_cast<float>(tileSet->tileWidth),static_cast<float>(tileSet->tileHeight) };
 					}
 
-					if (tile->isAnimated)
+				/*	if (tile->isAnimated)
 					{
 						tile->animator.setTotalColumn(tileSet->columnCount);
 						tile->animator.setTotalFrame(tileSet->tileCount);
 						tile->animator.setFrameSize(static_cast<float>(tileSet->tileWidth), static_cast<float>(tileSet->tileHeight));
 						tile->animator.setFrameTime(100);
-					}
+					}*/
+
+					tile->animator.setTotalColumn(tileSet->columnCount);
+					tile->animator.setTotalFrame(tileSet->tileCount);
+					tile->animator.setFrameSize(static_cast<float>(tileSet->tileWidth), static_cast<float>(tileSet->tileHeight));
 
 
 					int fx = tileNum % tileSet->columnCount * tileSet->tileWidth;
@@ -76,31 +83,32 @@ namespace BINDU
 
 					tile->sprite.setRect(srcRect);
 
-					m_tiles[row][column] = std::move(tile);
+					m_tiles.push_back(std::move(tile));
 			}
 				
 			
 		}
 	}
 
+	void TileLayer::onResetTilemap()
+	{
+		m_tiles.clear();
+		onLoadResource();
+	}
+
 	void TileLayer::Update(float dt)
 	{
 		Layer::Update(dt);
 
-		for (int row = 0; row < m_height; row++)
+		for(auto& tile:m_tiles)
 		{
-			for (int column = 0; column < m_width; column++)
+			if(tile)
 			{
-				if (m_mapData[row][column] == 0)
-					continue;
-
-				Tile* tile = m_tiles[row][column].get();
-
 				tile->sprite.setPosition(tile->position);
 				tile->sprite.setSize(tile->size);
 
-				
-				if(tile->isAnimated)
+
+				if (tile->isAnimated)
 				{
 					if (tile->frameTimer.stopwatch(tile->frames[tile->currentFrame].duration))
 					{
@@ -108,16 +116,14 @@ namespace BINDU
 						if (tile->currentFrame >= tile->frameCount)
 							tile->currentFrame = 0;
 					}
-					
+
 					tile->animator.setCurrentFrame(tile->frames[tile->currentFrame].tileId + 1);
 
 					Bnd_Rect_F srcRect = tile->animator.getCurrentFrame();
 					tile->sprite.setRect(srcRect);
 				}
-				
 			}
 		}
-
 
 	}
 
@@ -129,20 +135,14 @@ namespace BINDU
 		cameraMatrixWithParallax.dx = cameraMatrix.dx * m_parallaxFactor.x;
 		cameraMatrixWithParallax.dy = cameraMatrix.dy * m_parallaxFactor.y;
 
-		for (int row = 0; row < m_height; row++)
+		for(auto& tile:m_tiles)
 		{
-			for (int column = 0; column < m_width; column++)
+			if(tile)
 			{
-				if (m_mapData[row][column] == 0)
-					continue;
-
-				Tile* tile = m_tiles[row][column].get();
-
 				tile->sprite.Draw(graphics, cameraMatrixWithParallax);
-
 			}
 		}
-		
+
 
 	}
 

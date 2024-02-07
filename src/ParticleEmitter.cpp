@@ -153,7 +153,7 @@ namespace BINDU
 
 	void ParticleEmitter::SetTexture(const Texture& texture)
 	{
-		SetBitmap(texture.getBitmap());
+		m_spriteBatch.SetTexture(texture);
 	}
 
 	void ParticleEmitter::Generate()

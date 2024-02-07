@@ -37,7 +37,7 @@ namespace BINDU
 
 	}
 
-	void Scene::Update(float dt) const
+	void Scene::Update(float dt)
 	{
 		for(const auto& m: m_layers)
 		{
@@ -49,7 +49,7 @@ namespace BINDU
 		}
 	}
 
-	void Scene::Draw(Graphics* graphics, const D2D1_MATRIX_3X2_F& cameraMatrix) const
+	void Scene::Draw(Graphics* graphics, const D2D1_MATRIX_3X2_F& cameraMatrix)
 	{
 		for (const auto& m : m_layers)
 		{
@@ -60,7 +60,7 @@ namespace BINDU
 		}
 	}
 
-	void Scene::ProcessInput() const
+	void Scene::ProcessInput()
 	{
 		for (const auto& m : m_layers)
 		{

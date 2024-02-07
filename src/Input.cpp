@@ -47,7 +47,7 @@ namespace BINDU
 	 }
  }
 
- Position Input::getMousePosition()
+ Vec2f Input::getMousePosition()
  {
 	 return mouse.position;
  }
@@ -91,8 +91,8 @@ namespace BINDU
 
  void Input::updateMousePosition(LPARAM lParam)
  {
-	 mouse.position.x = GET_X_LPARAM(lParam);
-	 mouse.position.y = GET_Y_LPARAM(lParam);
+	 mouse.position.x = static_cast<float>(GET_X_LPARAM(lParam));
+	 mouse.position.y = static_cast<float>(GET_Y_LPARAM(lParam));
 
  }
 

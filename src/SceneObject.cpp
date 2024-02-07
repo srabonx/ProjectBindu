@@ -7,10 +7,10 @@ namespace BINDU
 	void SceneObject::UpdateWithChild(float dt)
 	{
 
-			m_collider.x = (m_position.x) + m_colliderOffsetRect.x;
-			m_collider.y = (m_position.y) + m_colliderOffsetRect.y;
-			m_collider.w = (m_size.width) - m_colliderOffsetRect.w;
-			m_collider.h = (m_size.height) - m_colliderOffsetRect.h;
+			m_collider.x = (m_position.x) ;
+			m_collider.y = (m_position.y) ;
+			m_collider.w = m_size.width ;
+			m_collider.h = m_size.height;
 		
 
 		Update(dt);

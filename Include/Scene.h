@@ -62,7 +62,7 @@ namespace BINDU
 
 	class Scene
 	{
-	private:
+	protected:
 
 
 		bool	m_isActive{};
@@ -79,13 +79,13 @@ namespace BINDU
 	public:
 
 		Scene() = default;
-		~Scene() = default;
+		virtual ~Scene() = default;
 
-		void			onLoadResource();
+		virtual void	onLoadResource();
 
-		void			Update(float dt) const;
-		void			Draw(Graphics* graphics, const D2D1_MATRIX_3X2_F& cameraMatrix) const;
-		void			ProcessInput() const;
+		virtual void	Update(float dt) ;
+		virtual void	Draw(Graphics* graphics, const D2D1_MATRIX_3X2_F& cameraMatrix) ;
+		virtual void	ProcessInput() ;
 
 		void			AddLayer(std::unique_ptr<Layer> sceneLayer, const char* guid);
 
@@ -103,7 +103,7 @@ namespace BINDU
 
 		inline std::string getGuid() const { return m_guid; }
 
-		void		setTileSets(std::vector<std::unique_ptr<TileSet>> tileSets) { m_tileSets = std::move(tileSets); }
+		void		addTileSet(std::unique_ptr<TileSet> tileSet) { m_tileSets.push_back(std::move(tileSet)); }
 		std::vector<std::unique_ptr<TileSet>>& getTileSets() { return m_tileSets; }
 
 		inline void		setWorldTileWidth(const int width) { m_wTileWidth = width; }

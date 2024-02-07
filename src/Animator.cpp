@@ -7,84 +7,84 @@ namespace BINDU
 {
 	bool Animator::LoadAnimationFile(const char* filename)
 	{
-		std::ifstream myFile;
-		AnimDetails animDetails {};
+		//std::ifstream myFile;
+		//AnimDetails animDetails {};
 
-		myFile.open(filename);
+		//myFile.open(filename);
 
 
-		if (myFile.is_open()) {
+		//if (myFile.is_open()) {
 
-			std::string frameCount;
-			std::string index;
-			std::string frameWidth;
-			std::string frameHeight;
+		//	std::string frameCount;
+		//	std::string index;
+		//	std::string frameWidth;
+		//	std::string frameHeight;
 
-			std::string buffer;
-			std::string state;
+		//	std::string buffer;
+		//	std::string state;
 
-			char myChar;
-			while (myFile) {
-				myChar = myFile.get();
-				if (myChar != ' ' && myChar != '\n') {
-					if (myChar != '=' && myChar != ':' && myChar != ',' && !isdigit(myChar) && myChar != ';' && myChar != '-')
-						buffer += myChar;
+		//	char myChar;
+		//	while (myFile) {
+		//		myChar = myFile.get();
+		//		if (myChar != ' ' && myChar != '\n') {
+		//			if (myChar != '=' && myChar != ':' && myChar != ',' && !isdigit(myChar) && myChar != ';' && myChar != '-')
+		//				buffer += myChar;
 
-					if (buffer == "frame_width")
-					{
-						if (isdigit(myChar))
-							frameWidth += myChar;
-						if (myChar == ',')
-							buffer.clear();
-					}
-					if (buffer == "frame_height")
-					{
-						if (isdigit(myChar))
-							frameHeight += myChar;
-						if (myChar == ',')
-							buffer.clear();
-					}
+		//			if (buffer == "frame_width")
+		//			{
+		//				if (isdigit(myChar))
+		//					frameWidth += myChar;
+		//				if (myChar == ',')
+		//					buffer.clear();
+		//			}
+		//			if (buffer == "frame_height")
+		//			{
+		//				if (isdigit(myChar))
+		//					frameHeight += myChar;
+		//				if (myChar == ',')
+		//					buffer.clear();
+		//			}
 
-					if (myChar == '-')
-					{
-						state = buffer;
-						buffer.clear();
-					}
-					if (buffer == "index")
-					{
-						if (isdigit(myChar))
-							index += myChar;
-						if (myChar == ',')
-							buffer.clear();
-					}
+		//			if (myChar == '-')
+		//			{
+		//				state = buffer;
+		//				buffer.clear();
+		//			}
+		//			if (buffer == "index")
+		//			{
+		//				if (isdigit(myChar))
+		//					index += myChar;
+		//				if (myChar == ',')
+		//					buffer.clear();
+		//			}
 
-					if (buffer == "frame_count")
-					{
-						if (isdigit(myChar))
-							frameCount += myChar;
-						if (myChar == ',')
-							buffer.clear();
-					}
+		//			if (buffer == "frame_count")
+		//			{
+		//				if (isdigit(myChar))
+		//					frameCount += myChar;
+		//				if (myChar == ',')
+		//					buffer.clear();
+		//			}
 
-					if (myChar == ';')//|| myChar == EOF)
-					{
-						m_frameSize.width = static_cast<float>(std::stoi(frameWidth));
-						m_frameSize.height = static_cast<float>(std::stoi(frameHeight));
-						animDetails.m_index = std::stoi(index);
-						animDetails.m_frameCount = std::stoi(frameCount);
-						m_animationMap[state] = animDetails;
-						state.clear();
-						index.clear();
-						frameCount.clear();
-						buffer.clear();
-					}
-				}
-			}
-		}
-		else
-			return false;
+		//			if (myChar == ';')//|| myChar == EOF)
+		//			{
+		//				m_frameSize.width = static_cast<float>(std::stoi(frameWidth));
+		//				m_frameSize.height = static_cast<float>(std::stoi(frameHeight));
+		//				animDetails.m_index = std::stoi(index);
+		//				animDetails.m_frameCount = std::stoi(frameCount);
+		//				m_animationMap[state] = animDetails;
+		//				state.clear();
+		//				index.clear();
+		//				frameCount.clear();
+		//				buffer.clear();
+		//			}
+		//		}
+		//	}
+		//}
+		//else
+		//	return false;
 
-		myFile.close();
+		//myFile.close();
 		return true;
 	}
 

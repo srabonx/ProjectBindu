@@ -9,7 +9,7 @@ namespace  BINDU
 {
 
 
-	using TileMap = std::vector<std::vector<std::unique_ptr<Tile>>>;
+	using TileMap = std::vector<std::unique_ptr<Tile>>;
 
 	class TileLayer: public Layer
 	{
@@ -24,9 +24,6 @@ namespace  BINDU
 		int			m_tileWidth{};
 		int			m_tileHeight{};
 
-		float		m_offsetX{};
-		float		m_offsetY{};
-
 		Timer       m_timer;
 
 	public:
@@ -37,6 +34,8 @@ namespace  BINDU
 		~TileLayer() = default;
 
 		void			onLoadResource();
+
+		void			onResetTilemap();
 
 		void			Update(float dt) override;
 
@@ -56,16 +55,10 @@ namespace  BINDU
 		void			setTileSet(TileSet* tileSets) { m_tileSets.push_back(tileSets); }
 
 
-		inline Tile*    getTile(int row, int column) const { return m_tiles[row][column].get(); }
+		inline Tile* getTile(int row, int column) const { row = row * (m_width - 1); row = row + column; return m_tiles[row].get(); }
 
 		TileMap&		getTileMap() { return m_tiles; }
 		inline void		setTileMap(TileMap tileMap) { m_tiles = std::move(tileMap); }
-
-		inline void		setOffsetX(const float x) { m_offsetX = x; }
-		inline float	getOffsetX() const { return m_offsetX; }
-
-		inline void		setOffsetY(const float y) { m_offsetY = y; }
-		inline float	getOffsetY() const { return m_offsetY; }
 
 		inline void		setWorldTileWidth(const int width) { m_tileWidth = width; }
 		inline int		getWorldTileWidth() const { return m_tileWidth; }

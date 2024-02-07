@@ -23,6 +23,7 @@
     <ClCompile Include="src\Bindu.cpp" />
     <ClCompile Include="src\BitmapLoader.cpp" />
     <ClCompile Include="src\Camera.cpp" />
+    <ClCompile Include="src\CollisionHandler.cpp" />
     <ClCompile Include="src\Drawable.cpp" />
     <ClCompile Include="src\Entity.cpp" />
     <ClCompile Include="src\Font.cpp" />
@@ -49,6 +50,7 @@
     <ClInclude Include="Include\BitmapLoader.h" />
     <ClInclude Include="Include\BND_Helper.h" />
     <ClInclude Include="Include\Camera.h" />
+    <ClInclude Include="Include\CollisionHandler.h" />
     <ClInclude Include="Include\constants.h" />
     <ClInclude Include="Include\Drawable.h" />
     <ClInclude Include="Include\Entity.h" />
@@ -69,6 +71,7 @@
     <ClInclude Include="Include\Sprite.h" />
     <ClInclude Include="Include\SpriteBatch.h" />
     <ClInclude Include="Include\StrConverter.h" />
+    <ClInclude Include="Include\Tile.h" />
     <ClInclude Include="Include\TileLayer.h" />
     <ClInclude Include="Include\TImer.h" />
     <ClInclude Include="Include\tinyxml2.h" />
@@ -137,12 +140,12 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <IncludePath>C:\DirectXTK\Inc;$(ProjectDir);$(IncludePath)</IncludePath>
     <TargetName>Bindu</TargetName>
-    <OutDir>$(ProjectDir)lib\</OutDir>
+    <OutDir>$(ProjectDir)x64\Debug\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <IncludePath>C:\DirectXTK\Inc;$(ProjectDir);$(IncludePath)</IncludePath>
     <TargetName>Bindu</TargetName>
-    <OutDir>$(ProjectDir)lib\</OutDir>
+    <OutDir>$(ProjectDir)x64\Release\</OutDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -184,13 +187,14 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <Lib>
-      <OutputFile>$(ProjectDir)lib\Bindu.lib</OutputFile>
+      <OutputFile>$(ProjectDir)x64\Debug\Bindu.lib</OutputFile>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -201,6 +205,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -209,7 +214,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <Lib>
-      <OutputFile>$(ProjectDir)lib\Bindu.lib</OutputFile>
+      <OutputFile>$(ProjectDir)x64\Release\Bindu.lib</OutputFile>
     </Lib>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

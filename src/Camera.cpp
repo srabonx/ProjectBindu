@@ -15,10 +15,14 @@ namespace BINDU
 		m_offset.x = (target.x - (g_engine->getWindowWidth() * 0.5f)) / m_zoom;
 		m_offset.y = (target.y - (g_engine->getWindowHeight() * 0.5f)) / m_zoom;
 
-		if (m_offset.x < 0)
-			m_offset.x = 0;
-		if (m_offset.y < 0)
-			m_offset.y = 0;
+		if (m_offset.x < m_topLeft.x)
+			m_offset.x = m_topLeft.x;
+		if (m_offset.y < m_topLeft.y)
+			m_offset.y = m_topLeft.y;
+		if (m_offset.x + m_viewSize.width > m_bottomRight.x)
+			m_offset.x = m_bottomRight.x - m_viewSize.width;
+		if (m_offset.y + m_viewSize.height > m_bottomRight.y)
+			m_offset.y = m_bottomRight.y - m_viewSize.height;
 
 		m_position.x = (m_offset.x + (m_position.x - m_offset.x) * 0.93f);
 		m_position.y = (m_offset.y + (m_position.y - m_offset.y) * 0.95f);
