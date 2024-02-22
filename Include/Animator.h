@@ -40,6 +40,8 @@ namespace BINDU
 
 		bool				LoadAnimationFile(const char* filename);
 		void				Animate(Bnd_Rect_F& srcRect);
+		Bnd_Rect_F			Animate();
+		Bnd_Rect_F			Animate(int firstFrame, int lastFrame);
 
 		// Accessor / Mutator functions
 
@@ -58,9 +60,10 @@ namespace BINDU
 		inline int			getTotalColumn() const { return m_totalColumn; }
 
 		inline void			setCurrentFrame(int frame) { m_currentFrame = frame; }
+		inline int			getCurrentFrameNum() const { return m_currentFrame + 1; }
 		Bnd_Rect_F			getCurrentFrame() const;
 
-		inline void			setCurrentRow(int row) { m_currentRow = row; }
+		inline void			setCurrentRow(int row) { m_currentRow = row; --m_currentRow; }
 		inline int			getCurrentRow() const { return m_currentRow; }
 
 		inline void			setFrameTime(int ms) { m_frameTimeMs = ms; }

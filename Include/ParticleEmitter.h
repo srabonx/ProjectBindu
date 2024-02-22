@@ -121,6 +121,9 @@ namespace BINDU
 		inline void		setSpread(int value) { m_spread = value; }
 		inline void		onLoop(bool value) { m_onLoop = value; }
 
+		inline void		ChangeParticleColor(const BND_COLOR& color) { m_particleProps.startColor = color; }
+		inline void		ChangeParticleVelocity(const Vec2f& velocity) { m_particleProps.velocity = velocity; }
+
 	};// Class
 
 };// Namespace

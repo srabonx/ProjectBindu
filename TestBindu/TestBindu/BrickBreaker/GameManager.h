@@ -6,9 +6,10 @@
 #include "MainScene.h"
 #include "MenuScene.h"
 #include "SceneManager.h"
+#include "SoundSystem.h"
 
 
-enum class State
+enum class GameState
 {
 	MENU,
 	GAME
@@ -26,11 +27,16 @@ private:
 
 	BINDU::SceneManager		m_sceneManager;
 
-	static State m_state;
+	static bool			m_musicOn;
+	static bool			m_sfxOn;
+
+	static GameState m_state;
+
+	static BINDU::SoundSystem* m_soundSystem;
 
 public:
 	GameManager() = default;
-	~GameManager() = default;
+	~GameManager();
 
 	void Preload();
 
@@ -42,6 +48,15 @@ public:
 
 	void Draw(BINDU::Graphics* graphics);
 
-	static void SetState(State state) { m_state = state; }
+	static void SetState(GameState state) { m_state = state; }
+
+	static BINDU::SoundSystem* getSoundSystem() { return m_soundSystem; }
+
+	static void setMusic(bool value) { m_musicOn = value; }
+	static bool getMusic() { return m_musicOn; }
+
+	static void setSfx(bool value) { m_sfxOn = value; }
+	static bool getSfx() { return m_sfxOn; }
+
 };
 

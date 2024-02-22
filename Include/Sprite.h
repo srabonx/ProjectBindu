@@ -34,6 +34,7 @@ namespace BINDU
 		inline void			setOpacity(const float opacity) { m_opacity = opacity / 255.f; }
 		inline float		getOpacity() const { return m_opacity * 255; }
 
+
 	};// Class
 
 };// Namespace

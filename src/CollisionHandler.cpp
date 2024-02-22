@@ -188,7 +188,7 @@ namespace BINDU
 	bool CollisionHandler::CircleVsRect(const Bnd_Circle& circle, const Vec2f& circleVelocity, const Bnd_Rect_F& target, const float dt, Vec2f& collisionNormal, float& overlap)
 	{
 		Vec2f nearestPoints;
-		Vec2f potentialPosition = circle.center + circleVelocity * dt;
+		Vec2f potentialPosition = circle.position + circleVelocity * dt;
 
 
 		nearestPoints.x = std::max(target.x , std::min(potentialPosition.x, (target.x + target.w) + 1));

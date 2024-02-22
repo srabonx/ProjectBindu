@@ -2,7 +2,17 @@
 #include <Bindu.h>
 
 #include "Animator.h"
+#include "ParticleEmitter.h"
 #include "Sprite.h"
+
+enum class PaddleType
+{
+	SMALL,
+	MID,
+	LARGE,
+	LASER,
+	MAGNETIC
+};
 
 class Paddle :public BINDU::SceneObject
 {
@@ -20,6 +30,22 @@ private:
 	BINDU::Animator		m_animator{};
 	BINDU::Bnd_Rect_F   m_srcRect{};
 
+	PaddleType			m_paddleType = PaddleType::MID;
+
+
+	BINDU::Texture		m_bulletTex;
+	std::vector<std::unique_ptr<BINDU::Sprite>> m_bullets;
+
+	BINDU::ParticleEmitter* m_muzzleFlashEmitter;
+
+
+	int					m_counter{600};
+
+private:
+
+	void	SetUpParticleEmitter();
+	void	FireBullet();
+
 public:
 
 	Paddle() = default;
@@ -27,7 +53,9 @@ public:
 
 	void	Init();
 
-	void    onLoadResource();
+	void    onLoadResource() override;
+
+	void	onReleaseResource() override;
 
 	void    Update(float dt) override;
 
@@ -35,11 +63,15 @@ public:
 
 	void    ProcessInput() override;
 
-	void    CheckCollision(const SceneObject& sceneObject) override;
+	void    CheckCollision( SceneObject& sceneObject) override;
 
 	inline BINDU::Vec2f getVelocity() { return m_velocity; }
 	inline void			setVelocity(const BINDU::Vec2f& velocity) { m_velocity = velocity;}
 
+	inline void	setPaddleType(const PaddleType& paddleType) { m_paddleType = paddleType; }
+	inline PaddleType getPaddleType() const { return m_paddleType; }
+
+	inline std::vector<std::unique_ptr<BINDU::Sprite>>& getBullets() { return m_bullets; }
 
 };
 

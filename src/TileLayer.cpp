@@ -36,6 +36,7 @@ namespace BINDU
 
 					std::unique_ptr<Tile> tile = std::make_unique<Tile>();
 
+					tile->gId = m_mapData[row][column];
 
 					for (auto& m : tileSet->tiles)
 					{
@@ -49,6 +50,7 @@ namespace BINDU
 					}
 
 					tile->id = tileNum;
+					tile->tileSet = tileSet;
 
 					if(tileSet->tileRenderSize == "grid")
 					{
@@ -82,12 +84,25 @@ namespace BINDU
 					tile->sprite.SetTexture(tileSet->tileTexture);
 
 					tile->sprite.setRect(srcRect);
+					tile->sprite.setGuid(("row:"+std::to_string(row) + "column:"+std::to_string(column)).c_str());
+					tile->isCollideAble = true;
 
 					m_tiles.push_back(std::move(tile));
 			}
 				
 			
 		}
+
+		Layer::onLoadResource();
+	}
+
+	void TileLayer::onReleaseResource()
+	{
+		m_mapData.clear();
+		m_tiles.clear();
+		m_tileSets.clear();
+
+		Layer::onReleaseResource();
 	}
 
 	void TileLayer::onResetTilemap()

@@ -7,9 +7,10 @@
 #include "Vector.h"
 
 using Microsoft::WRL::ComPtr;
+
+
 namespace BINDU
 {
-
 
 	class Drawable 
 	{

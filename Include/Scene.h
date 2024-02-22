@@ -12,6 +12,8 @@
 namespace BINDU
 {
 
+	struct TileSet;
+
 	struct TileFrame
 	{
 		int tileId{};
@@ -25,23 +27,26 @@ namespace BINDU
 	public:
 
 		int			id{};
+		int			gId{};
 		Vec2f		position{};
 		Bnd_Size_F	size{};
 		Sprite		sprite{};
 		bool		isAnimated{ false };
+		bool		isCollideAble{ true };
+		Vec2f		collisionNormal{};
 		Timer		frameTimer;
 		Animator    animator;
 		int			currentFrame{};
 		int			frameCount{};
 		std::vector<TileFrame> frames;
-
+		TileSet*	tileSet;
 	};
 
 	struct TileSet
 	{
 	public:
 
-		const char* name = nullptr;
+		std::string name{};
 		int			tileWidth{};
 		int			tileHeight{};
 		int			firstGid{};
@@ -82,6 +87,7 @@ namespace BINDU
 		virtual ~Scene() = default;
 
 		virtual void	onLoadResource();
+		virtual void    onReleaseResource();
 
 		virtual void	Update(float dt) ;
 		virtual void	Draw(Graphics* graphics, const D2D1_MATRIX_3X2_F& cameraMatrix) ;

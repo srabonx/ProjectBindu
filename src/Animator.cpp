@@ -94,12 +94,12 @@ namespace BINDU
 
 		if (m_frameTimer.stopwatch(m_frameTimeMs))
 		{
-			m_currentFrame++;
+			++m_currentFrame;
 			if (m_currentFrame <= 0) m_currentFrame = m_totalFrame;
 			if (m_currentFrame >= m_totalFrame)m_currentFrame = 0;
 		}
 
-		if (m_totalFrame > 1 && m_totalColumn > 0)
+		if (m_totalFrame > 1 && m_totalColumn > 0 && m_currentRow <= 0)
 		{
 			fx = static_cast<float>(m_currentFrame % m_totalColumn) * m_frameSize.width;
 			fy = m_currentFrame / m_totalColumn * m_frameSize.height;
@@ -117,10 +117,63 @@ namespace BINDU
 
 	}
 
+	Bnd_Rect_F Animator::Animate()
+	{
+		float fx, fy;
+
+		if (m_frameTimer.stopwatch(m_frameTimeMs))
+		{
+			++m_currentFrame;
+			if (m_currentFrame <= 0) m_currentFrame = m_totalFrame;
+			if (m_currentFrame >= m_totalFrame)m_currentFrame = 0;
+		}
+
+		if (m_totalFrame > 1 && m_totalColumn > 0 && m_currentRow <= 0)
+		{
+			fx = std::round(static_cast<float>(m_currentFrame % m_totalColumn) * m_frameSize.width);
+			fy = std::round(m_currentFrame / m_totalColumn * m_frameSize.height);
+		}
+		else
+		{
+			fx = std::round((static_cast<float>(m_currentFrame) * m_frameSize.width));
+			fy = std::round((static_cast<float>(m_currentRow) * m_frameSize.height));
+		}
+
+		return Bnd_Rect_F{ fx, fy, m_frameSize.width, m_frameSize.height };
+	}
+
+	Bnd_Rect_F Animator::Animate(int firstFrame, int lastFrame)
+	{
+
+		if (m_frameTimer.stopwatch(m_frameTimeMs))
+		{
+			++m_currentFrame;
+			if (m_currentFrame > lastFrame - 1)
+				m_currentFrame = firstFrame - 1;
+			else if (m_currentFrame < firstFrame - 1)
+				m_currentFrame = lastFrame - 1;
+		}
+
+		const float fx = std::round((static_cast<float>(m_currentFrame) * m_frameSize.width));
+		const float fy = std::round((static_cast<float>(m_currentRow) * m_frameSize.height));
+
+		return Bnd_Rect_F{ fx, fy, m_frameSize.width, m_frameSize.height };
+	}
+
 	Bnd_Rect_F Animator::getCurrentFrame() const
 	{
-		float fx = static_cast<float>((m_currentFrame - 1) % m_totalColumn) * m_frameSize.width;
-		float fy = (m_currentFrame - 1) / m_totalColumn * m_frameSize.height;
+		float fx{ 0 };
+		float fy{ 0 };
+		if (m_currentRow <= 0)
+		{
+			fx = std::round(static_cast<float>((m_currentFrame - 1) % m_totalColumn) * m_frameSize.width);
+			fy = std::round((m_currentFrame - 1) / m_totalColumn * m_frameSize.height);
+		}
+		else
+		{
+			fx = std::round(static_cast<float>((m_currentFrame - 1) % m_totalColumn) * m_frameSize.width);
+			fy = std::round(static_cast<float>(m_currentRow) * m_frameSize.height);
+		}
 
 		return{ fx,fy,m_frameSize.width,m_frameSize.height };
 	}

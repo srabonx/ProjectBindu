@@ -31,6 +31,7 @@ namespace BINDU {
 		BITMAP_RENDERTARGET = 1 << 2,		// 00100 == 3
 	};
 
+
 	class Graphics {
 	private:
 		HWND m_windowHandle;														// Handle to window

@@ -61,12 +61,28 @@ namespace BINDU
 
 			);
 
+			ComPtr<ID2D1Bitmap> tempBitmap;
+
 
 			DX::ThrowIfFailed(
 
-				g_engine->getGraphics()->getRenderTarget()->CreateBitmapFromWicBitmap(pConverter.Get(), NULL, ppBitmap)
+				g_engine->getGraphics()->getRenderTarget()->CreateBitmapFromWicBitmap(pConverter.Get(), tempBitmap.ReleaseAndGetAddressOf())
 
 			);
+
+
+			if(tempBitmap)
+			{
+				D2D1_SIZE_F tempSize = tempBitmap->GetSize();
+
+				DX::ThrowIfFailed(
+					g_engine->getGraphics()->getRenderTarget()->CreateBitmap(D2D1::SizeU(static_cast<UINT32>(tempSize.width),static_cast<UINT32>( tempSize.height)), nullptr, 0, D2D1::BitmapProperties(D2D1::PixelFormat(DXGI_FORMAT_B8G8R8A8_UNORM, D2D1_ALPHA_MODE_PREMULTIPLIED)), ppBitmap)
+				);
+
+				(*ppBitmap)->CopyFromBitmap(nullptr,tempBitmap.Get(),nullptr);
+
+			}
+
 		}
 			return true;
 	}

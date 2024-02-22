@@ -6,16 +6,47 @@
 
 namespace BINDU
 {
+
+
+	void Layer::onLoadResource()
+	{
+		for (const auto& object : m_objects)
+			object->onLoadResource();
+	}
+
+	void Layer::onReleaseResource()
+	{
+		for (const auto& object : m_objects)
+			object->onReleaseResource();
+
+		m_objects.clear();
+	}
+
+	void Layer::Clear()
+	{
+		m_objects.clear();
+	}
+
+
 	void Layer::Update(float dt)
 	{
-		for(const auto& m:m_objects)
+		if (m_isUpdating)
 		{
-			if (m->isActive())
+			for (const auto& m : m_objects)
 			{
-				m->setTranslation(m_offsetX, m_offsetY);
-				m->UpdateWithChild(dt);
+				if (m)
+				{
+					if (m->isQueuedForDestroy())
+					{
+						RemoveObject(m->getGuid().c_str());
+					}
+					else if (m->isActive())
+					{
+						m->setTranslation(m_offsetX, m_offsetY);
+						m->UpdateWithChild(dt);
+					}
+				}
 			}
-				
 		}
 
 	}
@@ -34,11 +65,25 @@ namespace BINDU
 				if(m_showDebug)
 				{
 					m->UpdateTransform();
-					graphics->getRenderTarget()->SetTransform(m->getTransform() * cameraMatrixWithParallax);
-					graphics->getSolidColorBrush()->SetColor(D2D1::ColorF(D2D1::ColorF::Red));
-					graphics->getRenderTarget()->DrawRectangle({ m->getCollider().x,m->getCollider().y,m->getCollider().x + m->getCollider().w,m->getCollider().y+m->getCollider().h }, graphics->getSolidColorBrush());
-					graphics->getRenderTarget()->SetTransform(D2D1::Matrix3x2F::Identity());
-					graphics->getSolidColorBrush()->SetColor(D2D1::ColorF(D2D1::ColorF::Blue));
+				
+
+					if(m->getColliderType() == ColliderType::RECT_COLLIDER)
+					{
+						graphics->getRenderTarget()->SetTransform(m->getTransform() * cameraMatrixWithParallax);
+						graphics->getSolidColorBrush()->SetColor(D2D1::ColorF(D2D1::ColorF::Red));
+						graphics->getRenderTarget()->DrawRectangle({ m->getRectCollider().x,m->getRectCollider().y,m->getRectCollider().x + m->getRectCollider().w,m->getRectCollider().y + m->getRectCollider().h }, graphics->getSolidColorBrush());
+						graphics->getRenderTarget()->SetTransform(D2D1::Matrix3x2F::Identity());
+						graphics->getSolidColorBrush()->SetColor(D2D1::ColorF(D2D1::ColorF::Blue));
+					}
+					else if(m->getColliderType() == ColliderType::CIRCLE_COLLIDER)
+					{
+						graphics->getRenderTarget()->SetTransform(m->getTransform() * cameraMatrixWithParallax);
+						graphics->getSolidColorBrush()->SetColor(D2D1::ColorF(D2D1::ColorF::Red));
+						graphics->getRenderTarget()->DrawEllipse(D2D1::Ellipse({ m->getCircleCollider().position.x,m->getCircleCollider().position.y }, m->getCircleCollider().radius, m->getCircleCollider().radius), graphics->getSolidColorBrush());
+						graphics->getRenderTarget()->SetTransform(D2D1::Matrix3x2F::Identity());
+						graphics->getSolidColorBrush()->SetColor(D2D1::ColorF(D2D1::ColorF::Blue));
+					}
+
 
 				}
 
@@ -50,12 +95,16 @@ namespace BINDU
 
 	void Layer::ProcessInput() const
 	{
-		for (const auto& m : m_objects)
+		if (m_isUpdating)
 		{
-			if (m->isActive())
-				m->ProcessAllInput();
+			for (const auto& m : m_objects)
+			{
+				if (m->isActive())
+					m->ProcessAllInput();
+			}
 		}
 	}
+
 
 	void Layer::AddObject(std::unique_ptr<SceneObject> sceneObject, const char* guid)
 	{
@@ -83,6 +132,17 @@ namespace BINDU
 		return result;
 	}
 
+	void Layer::RemoveExcept(const char* guid)
+	{
+		for(auto itr = m_objects.begin(); itr != m_objects.end(); )
+		{
+			if ((*itr)->getGuid() != std::string(guid))
+				itr = m_objects.erase(itr);
+			else
+				++itr;
+		}
+	}
+
 	SceneObject* Layer::getObject(const char* guid)
 	{
 		if (getObjectCount() > 0)
@@ -90,7 +150,7 @@ namespace BINDU
 			const auto found = std::find_if(m_objects.begin(), m_objects.end(),
 				[&](const std::unique_ptr<SceneObject>& obj) -> bool {return obj->getGuid() == guid; });
 
-			if (*found)
+			if (found != m_objects.end())
 				return found->get();
 		}
 
@@ -108,12 +168,15 @@ namespace BINDU
 				{
 					if (m->isCollideAble() && m2->isCollideAble())
 					{
-						if(CollisionHandler::RectVsRect(m->getCollider(), m2->getCollider()))
-						{
-							m->CheckCollision(*m2);
-							m2->CheckCollision(*m);
-						}
 
+						if (m->getColliderType() == ColliderType::RECT_COLLIDER && m2->getColliderType() == ColliderType::RECT_COLLIDER)
+						{
+							if (CollisionHandler::RectVsRect(m->getRectCollider(), m2->getRectCollider()))
+							{
+								m->CheckCollision(*m2);
+								m2->CheckCollision(*m);
+							}
+						}
 					}
 				}
 

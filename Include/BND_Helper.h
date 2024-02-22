@@ -58,9 +58,9 @@ namespace BINDU
 	struct Bnd_Circle
 	{
 		Bnd_Circle() = default;
-		Bnd_Circle(const Vec2f& center, const float radius) : center(center), radius(radius) {}
+		Bnd_Circle(const Vec2f& position, const float radius) : position(position), radius(radius) {}
 
-		Vec2f center{};
+		Vec2f position{};
 		float radius{};
 	};
 

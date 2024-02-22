@@ -12,6 +12,13 @@
 
 namespace BINDU
 {
+
+	enum class ColliderType
+	{
+		RECT_COLLIDER,
+		CIRCLE_COLLIDER,
+	};
+
 	class SceneObject : public Drawable, public Transformable
 	{
 	private:
@@ -20,13 +27,21 @@ namespace BINDU
 
 		bool			m_isActive{};
 
+		bool			m_doDestroy{ false };
+
 		std::string     m_guid{};
 
 	protected:
 
-		Bnd_Rect_F      m_collider{};
+		Bnd_Rect_F      m_rectCollider{};
+
+		Bnd_Circle		m_circleCollider{};
+
+		ColliderType	m_colliderType = ColliderType::RECT_COLLIDER;
 
 		Bnd_Rect_F		m_colliderOffsetRect{};
+
+		float			m_colliderOffsetRadius{};
 
 		bool			m_collideAble{};
 
@@ -37,7 +52,10 @@ namespace BINDU
 
 		virtual void	Update(float dt) = 0;
 		virtual void	ProcessInput() = 0;
-		virtual void    CheckCollision(const SceneObject& sceneObject){}
+		virtual void    CheckCollision(SceneObject& sceneObject){}
+		virtual void	onLoadResource();
+		virtual void	onReleaseResource();
+
 
 		void			UpdateWithChild(float dt);
 
@@ -57,24 +75,30 @@ namespace BINDU
 
 		inline bool		isActive() const { return m_isActive; }
 
+		inline void     queueForDestroy(const bool destroy) { m_doDestroy = destroy; }
+
+		inline bool		isQueuedForDestroy() const { return m_doDestroy; }
+
 		inline void		setGuid(const char* guid) { m_guid = guid; }
 
 		inline std::string getGuid() const { return m_guid; }
 
 		inline int		getChildCount() const { return static_cast<int>(m_childs.size()); }
 
-		inline void		setCollider(const Bnd_Rect_F& collider) { m_collider = collider; }
+		inline void		setCollider(const Bnd_Rect_F& collider) { m_colliderOffsetRect = collider; }
 
-		inline Bnd_Rect_F getCollider() const { return m_collider; }
+		inline Bnd_Rect_F getRectCollider() const { return m_rectCollider; }
 
-		inline void		setColliderOffset(float x,float y,float w,float h)
-		{
-			m_colliderOffsetRect = { x,y,w,h };
-		}
+		inline void		setCircleColliderRadius(const float radius) { m_colliderOffsetRadius = radius; }
+
+		inline Bnd_Circle	getCircleCollider() const { return m_circleCollider; }
 
 		inline void		setCollideAble(const bool value) { m_collideAble = value; }
 
 		inline bool		isCollideAble() const { return m_collideAble; }
+
+		inline void		setColliderType(const ColliderType& colliderType) { m_colliderType = colliderType; }
+		inline ColliderType getColliderType() const { return m_colliderType; }
 
 
 	};//Class

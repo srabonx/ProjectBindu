@@ -1,8 +1,11 @@
 #include "Include/Sprite.h"
 
+#include "Include/Bindu.h"
+
 
 namespace BINDU
 {
+
 	Sprite::Sprite()
 	{
 		m_rotation = 0;	
@@ -43,14 +46,15 @@ namespace BINDU
 		UpdateTransform();
 
 		graphics->getRenderTarget()->SetTransform(m_transform * cameraMatrix);
-		
+
 		graphics->getRenderTarget()->DrawBitmap(m_bitmap.Get(),
 			{ m_position.x,m_position.y,(m_position.x + m_size.width),(m_position.y + m_size.height) },
 			m_opacity,
-			D2D1_BITMAP_INTERPOLATION_MODE::D2D1_BITMAP_INTERPOLATION_MODE_LINEAR,
+			D2D1_BITMAP_INTERPOLATION_MODE::D2D1_BITMAP_INTERPOLATION_MODE_NEAREST_NEIGHBOR,
 			m_srcRect);
 
-		graphics->getRenderTarget()->SetTransform(D2D1::Matrix3x2F::Identity());
+
+			graphics->getRenderTarget()->SetTransform(D2D1::Matrix3x2F::Identity());
 		
 	}
 
@@ -63,7 +67,7 @@ namespace BINDU
 		graphics->getRenderTarget()->DrawBitmap(m_bitmap.Get(),
 			{ m_position.x ,m_position.y ,(m_position.x + m_size.width) ,(m_position.y + m_size.height) },
 			m_opacity,
-			D2D1_BITMAP_INTERPOLATION_MODE::D2D1_BITMAP_INTERPOLATION_MODE_LINEAR,
+			D2D1_BITMAP_INTERPOLATION_MODE::D2D1_BITMAP_INTERPOLATION_MODE_NEAREST_NEIGHBOR,
 			D2D1::RectF(srcRect.x, srcRect.y, srcRect.x + srcRect.w, srcRect.y + srcRect.h));
 
 		graphics->getRenderTarget()->SetTransform(D2D1::Matrix3x2F::Identity());

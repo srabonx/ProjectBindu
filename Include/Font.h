@@ -11,14 +11,18 @@ namespace BINDU
 	{
 	private:
 		Texture m_fontTexture;
-		int		m_widths[256]{ };
+		float	m_widths[256]{ };
 
 		SpriteBatch m_spriteBatch;
 
 		int		m_totalColumn{};
+		int		m_totalRow{};
+
 		Bnd_Size_F m_charSize{};
 
 		Bnd_Size_F m_srcCharSize{};
+
+		int		m_startIndex{};
 
 	public:
 		Font();
@@ -48,6 +52,9 @@ namespace BINDU
 		bool LoadWidthData(const char* filename);
 		bool LoadBitmapFont(const char* filename);
 
+		inline void setStartIndex(int startIndex = 0) { m_startIndex = startIndex; }
+
+		inline void setTotalColumnRow(int rowCount = 16, int columnCount = 16) { m_totalColumn = columnCount; m_totalRow = rowCount; }
 	};
 
 	

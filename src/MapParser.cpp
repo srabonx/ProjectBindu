@@ -97,6 +97,7 @@ namespace BINDU
 					}
 				}
 				tile->frameCount = static_cast<int>(tile->frames.size());
+				tile->tileSet = tileSet.get();
 				tileSet->tiles.push_back(std::move(tile));
 			}
 		}

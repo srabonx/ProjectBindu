@@ -3,6 +3,21 @@
 
 namespace BINDU
 {
+
+	void SceneManager::onLoadResource()
+	{
+		for (const auto& scene : m_scenes)
+			scene->onLoadResource();
+	}
+
+	void SceneManager::onReleaseResource()
+	{
+		for (const auto& scene : m_scenes)
+			scene->onReleaseResource();
+
+		m_scenes.clear();
+	}
+
 	void SceneManager::Update(float dt) const
 	{
 		for(const auto& m: m_scenes)
@@ -64,6 +79,7 @@ namespace BINDU
 				m->ProcessInput();
 		}
 	}
+
 
 	void SceneManager::AddScene(std::unique_ptr<Scene> scene, const char* guid)
 	{

@@ -11,37 +11,47 @@ namespace BINDU
 {
 	void Scene::onLoadResource()
 	{
-		for(auto& m:m_tileSets)
+		for(const auto& tileset:m_tileSets)
 		{
 
 			std::wostringstream wstm;
 
 			const std::ctype<wchar_t>& ctfacet = std::use_facet<std::ctype<wchar_t>>(wstm.getloc());
 
-			for (const char i : m->source)
+			for (const char i : tileset->source)
 				wstm << ctfacet.widen(i);
 
-			m->tileTexture.LoadFromFile(m->source.c_str());
+			tileset->tileTexture.LoadFromFile(tileset->source.c_str());
 		}
 
-		for(auto& m:m_layers)
+		for(const auto& layer:m_layers)
 		{
-			if (TileLayer* layer = dynamic_cast<TileLayer*>(m.get()))
+			if (TileLayer* tLayer = dynamic_cast<TileLayer*>(layer.get()))
 			{
-				layer->setWorldTileWidth(m_wTileWidth);
-				layer->setWorldTileHeight(m_wTileHeight);
-				layer->onLoadResource();
+				tLayer->setWorldTileWidth(m_wTileWidth);
+				tLayer->setWorldTileHeight(m_wTileHeight);
+				tLayer->onLoadResource();
 			}
+			else
+				layer->onLoadResource();
 		}
 
 
+	}
+
+	void Scene::onReleaseResource()
+	{
+		for (const auto& layer : m_layers)
+			layer->onReleaseResource();
+
+		m_layers.clear();
 	}
 
 	void Scene::Update(float dt)
 	{
 		for(const auto& m: m_layers)
 		{
-			if (m->isActive())
+			if (m->isActive() && m->isUpdating())
 			{
 				m->Update(dt);
 				m->CheckCollision();
@@ -64,7 +74,7 @@ namespace BINDU
 	{
 		for (const auto& m : m_layers)
 		{
-			if (m->isActive())
+			if (m->isActive() && m->isUpdating())
 				m->ProcessInput();
 		}
 	}

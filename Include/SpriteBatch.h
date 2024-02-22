@@ -5,7 +5,7 @@
 
 namespace BINDU
 {
-	class SpriteBatch : private SceneObject
+	class SpriteBatch : public SceneObject
 	{
 	private:
 		ComPtr<ID2D1SpriteBatch>		m_spriteBatch;
@@ -50,6 +50,6 @@ namespace BINDU
 		// Accessor/Mutator functions
 
 		inline ID2D1SpriteBatch*    getSpriteBatch() const { return m_spriteBatch.Get(); }
-		
+
 	};
 }// namespace

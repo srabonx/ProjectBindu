@@ -40,10 +40,67 @@ namespace BINDU
 	 {
 		 if (VKcode >= 'A' && VKcode <= 'Z')
 		 {
-			 uint32_t bnd_keyCode = VKcode - 'A';
+			 const uint32_t bnd_keyCode = VKcode - 'A';
 			 keyboard.keys[bnd_keyCode].isDown = isDown;
 			 keyboard.keys[bnd_keyCode].wasDown = wasDown;
 		 }
+		 else if(VKcode == VK_UP)
+		 {
+			 keyboard.keys[BND_UP].wasDown = wasDown;
+			 keyboard.keys[BND_UP].isDown = isDown;
+		 }
+		 else if (VKcode == VK_DOWN)
+		 {
+			 keyboard.keys[BND_DOWN].wasDown = wasDown;
+			 keyboard.keys[BND_DOWN].isDown = isDown;
+		 }
+		 else if (VKcode == VK_LEFT)
+		 {
+			 keyboard.keys[BND_LEFT].wasDown = wasDown;
+			 keyboard.keys[BND_LEFT].isDown = isDown;
+		 }
+		 else if (VKcode == VK_RIGHT)
+		 {
+			 keyboard.keys[BND_RIGHT].wasDown = wasDown;
+			 keyboard.keys[BND_RIGHT].isDown = isDown;
+		 }
+		 else if(VKcode >= '0' && VKcode <='9')
+		 {
+			 const uint32_t bnd_keyCode = VKcode - '0' + BND_0;
+			 keyboard.keys[bnd_keyCode].isDown = isDown;
+			 keyboard.keys[bnd_keyCode].wasDown = wasDown;
+		 }
+		 else if(VKcode == VK_OEM_MINUS)
+		 {
+			 keyboard.keys[BND_MINUS].wasDown = wasDown;
+			 keyboard.keys[BND_MINUS].isDown = isDown;
+		 }
+		 else if (VKcode == VK_OEM_PLUS)
+		 {
+			 keyboard.keys[BND_PLUS].wasDown = wasDown;
+			 keyboard.keys[BND_PLUS].isDown = isDown;
+		 }
+		 else if (VKcode == VK_SHIFT)
+		 {
+			 keyboard.keys[BND_SHIFT].wasDown = wasDown;
+			 keyboard.keys[BND_SHIFT].isDown = isDown;
+		 }
+		 else if (VKcode == VK_ESCAPE)
+		 {
+			 keyboard.keys[BND_ESCAPE].wasDown = wasDown;
+			 keyboard.keys[BND_ESCAPE].isDown = isDown;
+		 }
+		 else if (VKcode == VK_SPACE)
+		 {
+			 keyboard.keys[BND_SPACE].wasDown = wasDown;
+			 keyboard.keys[BND_SPACE].isDown = isDown;
+		 }
+		 else if (VKcode == VK_RETURN)
+		 {
+			 keyboard.keys[BND_ENTER].wasDown = wasDown;
+			 keyboard.keys[BND_ENTER].isDown = isDown;
+		 }
+
 	 }
  }
 

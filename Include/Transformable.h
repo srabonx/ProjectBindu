@@ -31,7 +31,8 @@ namespace BINDU
 
 		virtual void			UpdateTransform();
 
-		inline void				setTransform(const D2D1_MATRIX_3X2_F& transform) { m_transform = transform; }
+		virtual void			setTransform(const D2D1_MATRIX_3X2_F& transform) { m_transform = transform; }
+
 		inline D2D1_MATRIX_3X2_F getTransform() const { return m_transform; }
 
 		Vec2f					getCenter() const;

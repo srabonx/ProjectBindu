@@ -15,6 +15,8 @@ namespace BINDU
 
 		bool	m_isActive{};
 
+		bool    m_isUpdating{ true };
+
 		Vec2f   m_parallaxFactor{ 1.f,1.f };
 
 		std::string m_guid{};
@@ -37,16 +39,24 @@ namespace BINDU
 
 		virtual void			Draw(Graphics* graphics, const D2D1_MATRIX_3X2_F& cameraMatrix) const;
 		virtual void			ProcessInput() const;
+		virtual void			onLoadResource();
+		virtual void			onReleaseResource();
+		virtual void			Clear();
 
 		void			AddObject(std::unique_ptr<SceneObject> sceneObject, const char* guid);
 
 		std::unique_ptr<SceneObject> RemoveObject(const char* guid);
+
+		void			RemoveExcept(const char* guid);								// Removes all sceneobjects except the mentioned.
 
 		SceneObject*	getObject(const char* guid);
 
 		inline void		setActive(const bool value) { m_isActive = value; }
 
 		inline bool		isActive() const { return m_isActive; }
+
+		inline void		setUpdating(const bool value) { m_isUpdating = value; }
+		inline bool		isUpdating() const { return m_isUpdating; }
 
 		inline int		getObjectCount() const { return static_cast<int>(m_objects.size()); }
 

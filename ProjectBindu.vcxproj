@@ -36,6 +36,7 @@
     <ClCompile Include="src\Scene.cpp" />
     <ClCompile Include="src\SceneManager.cpp" />
     <ClCompile Include="src\SceneObject.cpp" />
+    <ClCompile Include="src\SoundSystem.cpp" />
     <ClCompile Include="src\SpriteBatch.cpp" />
     <ClCompile Include="src\Sprite.cpp" />
     <ClCompile Include="src\TileLayer.cpp" />
@@ -54,6 +55,13 @@
     <ClInclude Include="Include\constants.h" />
     <ClInclude Include="Include\Drawable.h" />
     <ClInclude Include="Include\Entity.h" />
+    <ClInclude Include="Include\fmod.h" />
+    <ClInclude Include="Include\fmod_codec.h" />
+    <ClInclude Include="Include\fmod_common.h" />
+    <ClInclude Include="Include\fmod_dsp.h" />
+    <ClInclude Include="Include\fmod_dsp_effects.h" />
+    <ClInclude Include="Include\fmod_errors.h" />
+    <ClInclude Include="Include\fmod_output.h" />
     <ClInclude Include="Include\Font.h" />
     <ClInclude Include="Include\Game.h" />
     <ClInclude Include="Include\Graphics.h" />
@@ -68,7 +76,9 @@
     <ClInclude Include="Include\Scene.h" />
     <ClInclude Include="Include\SceneManager.h" />
     <ClInclude Include="Include\SceneObject.h" />
+    <ClInclude Include="Include\SoundSystem.h" />
     <ClInclude Include="Include\Sprite.h" />
+    <ClInclude Include="Include\Animation.h" />
     <ClInclude Include="Include\SpriteBatch.h" />
     <ClInclude Include="Include\StrConverter.h" />
     <ClInclude Include="Include\Tile.h" />
@@ -78,6 +88,7 @@
     <ClInclude Include="Include\Transformable.h" />
     <ClInclude Include="Include\Vector.h" />
     <ClInclude Include="Include\Texture.h" />
+    <ClInclude Include="Include\fmod.hpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>

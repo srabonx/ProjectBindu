@@ -12,10 +12,7 @@ namespace BINDU
 		m_coEff = 1.0f / 255.f;
 	}
 
-	SpriteBatch::~SpriteBatch()
-	{
-
-	}
+	SpriteBatch::~SpriteBatch()	= default;
 
 	void SpriteBatch::Init()
 	{
@@ -72,9 +69,10 @@ namespace BINDU
 			lSrcRect.bottom = static_cast<UINT32>(m_bitmapSize.height);
 		}
 
-		m_origin = { lDstRect.left + ((lDstRect.right - lDstRect.left) / 2.f), lDstRect.top + ((lDstRect.right - lDstRect.left) / 2.f) };
+		m_origin = { lDstRect.left + ((lDstRect.right - lDstRect.left) * 0.5f), lDstRect.top + ((lDstRect.bottom - lDstRect.top) * 0.5f) };
 
 
+	//	const D2D1_MATRIX_3X2_F translationM = D2D1::Matrix3x2F::Translation(lDstRect.left, lDstRect.top);
 		const D2D1_MATRIX_3X2_F rotationM = D2D1::Matrix3x2F::Rotation(rotation,m_origin);
 		const D2D1_MATRIX_3X2_F scaleM = D2D1::Matrix3x2F::Scale(scale, scale, m_origin);
 
@@ -102,29 +100,36 @@ namespace BINDU
 		lDstRect.right = dstRect->x + dstRect->w;
 		lDstRect.bottom = dstRect->y + dstRect->h;
 
-		D2D1_RECT_U* lSrcRect{};
+		D2D1_RECT_U lSrcRect{};
 
 		if (srcRect)
 		{
-			lSrcRect->left = srcRect->x;
-			lSrcRect->top = srcRect->y;
-			lSrcRect->right = srcRect->x + srcRect->w;
-			lSrcRect->bottom = srcRect->y + srcRect->h;
+			lSrcRect.left = srcRect->x;
+			lSrcRect.top = srcRect->y;
+			lSrcRect.right = srcRect->x + srcRect->w;
+			lSrcRect.bottom = srcRect->y + srcRect->h;
 		}
 		else
-			lSrcRect = nullptr;
+		{
+			lSrcRect.left = 0;
+			lSrcRect.top = 0;
+			lSrcRect.right = static_cast<UINT32>(m_bitmapSize.width);
+			lSrcRect.bottom = static_cast<UINT32>(m_bitmapSize.height);
+		}
+			
 
 
 
-		m_origin = { lDstRect.left + ((lDstRect.right - lDstRect.left) / 2.f), lDstRect.top + ((lDstRect.right - lDstRect.left) / 2.f) };
+		m_origin = { lDstRect.left + ((lDstRect.right - lDstRect.left) * 0.5f), lDstRect.top + ((lDstRect.bottom - lDstRect.top) * 0.5f) };
 
+		//const D2D1_MATRIX_3X2_F translationM = D2D1::Matrix3x2F::Translation(lDstRect.left, lDstRect.top);
 		const D2D1_MATRIX_3X2_F rotationM = D2D1::Matrix3x2F::Rotation(newRotation, m_origin);
 		const D2D1_MATRIX_3X2_F scaleM = D2D1::Matrix3x2F::Scale(newScale, newScale, m_origin);
 
 		const D2D1_MATRIX_3X2_F transform = scaleM * rotationM * m_cameraTransform;
 
 		DX::ThrowIfFailed(
-			m_spriteBatch->SetSprites(index, 1, &lDstRect, lSrcRect, &lColor, &transform)
+			m_spriteBatch->SetSprites(index, 1, &lDstRect, &lSrcRect, &lColor, &transform)
 		);
 
 	}
@@ -150,7 +155,7 @@ namespace BINDU
 		graphics->getRenderTarget()->SetAntialiasMode(D2D1_ANTIALIAS_MODE_ALIASED);
 		UpdateTransform();
 		m_cameraTransform = cameraMatrix;
-		m_deviceContext->DrawSpriteBatch(m_spriteBatch.Get(), index, count, m_bitmap.Get());
+		m_deviceContext->DrawSpriteBatch(m_spriteBatch.Get(), index, count, m_bitmap.Get(),D2D1_BITMAP_INTERPOLATION_MODE_NEAREST_NEIGHBOR,D2D1_SPRITE_OPTIONS_CLAMP_TO_SOURCE_RECTANGLE);
 		graphics->getRenderTarget()->SetAntialiasMode(D2D1_ANTIALIAS_MODE_PER_PRIMITIVE);
 
 	}
@@ -165,7 +170,7 @@ namespace BINDU
 		graphics->getRenderTarget()->SetAntialiasMode(D2D1_ANTIALIAS_MODE_ALIASED);
 		UpdateTransform();
 		m_cameraTransform = cameraMatrix;
-		m_deviceContext->DrawSpriteBatch(m_spriteBatch.Get(), m_bitmap.Get());
+		m_deviceContext->DrawSpriteBatch(m_spriteBatch.Get(), m_bitmap.Get(), D2D1_BITMAP_INTERPOLATION_MODE_NEAREST_NEIGHBOR, D2D1_SPRITE_OPTIONS_CLAMP_TO_SOURCE_RECTANGLE);
 		graphics->getRenderTarget()->SetAntialiasMode(D2D1_ANTIALIAS_MODE_PER_PRIMITIVE);
 
 	}

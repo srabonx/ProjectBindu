@@ -33,7 +33,9 @@ namespace  BINDU
 		TileLayer& operator = (TileLayer&) = delete;
 		~TileLayer() = default;
 
-		void			onLoadResource();
+		void			onLoadResource() override;
+
+		void			onReleaseResource() override;
 
 		void			onResetTilemap();
 

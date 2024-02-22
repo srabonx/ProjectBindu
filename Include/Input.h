@@ -1,6 +1,6 @@
 #pragma once
 
-#define BINDU_MAX_KEYS 26
+#define BINDU_MAX_KEYS 52
 #define BINDU_MAX_MOUSE_BUTTONS 5
 
 #define BND_A 0
@@ -30,11 +30,41 @@
 #define BND_Y 24
 #define BND_Z 25
 
+#define BND_UP 26
+#define BND_DOWN 27
+#define BND_LEFT 28
+#define BND_RIGHT 29
+
+#define BND_0	30
+#define BND_1	31
+#define BND_2	32
+#define BND_3	33
+#define BND_4	34
+#define BND_5	35
+#define BND_6	36
+#define BND_7	37
+#define BND_8	38
+#define BND_9	39
+#define BND_MINUS	40
+#define BND_PLUS	41
+
+#define BND_SHIFT	42
+#define BND_CONTROL	43
+#define BND_ALT		44
+#define BND_SPACE	45
+#define BND_ESCAPE	46
+#define BND_CAPSLOCK 47
+#define BND_TAB		48
+#define BND_ENTER	49
+#define BND_BACKSPACE 50
+#define BND_TILDE	51
+
 #define BND_BTN_LEFT 0
 #define BND_BTN_MIDDLE 1
 #define BND_BTN_RIGHT 2
 #define BND_BTN_X1 3
 #define BND_BTN_X2 4
+
 #include <cstdint>
 #include <Windows.h>
 

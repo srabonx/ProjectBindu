@@ -62,6 +62,8 @@ namespace BINDU
 	{
 		if (m_currentAlive > 0)
 		{
+		//	m_spriteBatch.setTranslation(this->m_position);
+			
 			m_spriteBatch.Draw(graphics,cameraMatrix);
 		}
 	}
@@ -109,13 +111,13 @@ namespace BINDU
 		}
 
 
-		particle.dstRect.x = m_position.x;
-		particle.dstRect.y = m_position.y;
+		particle.dstRect.x = m_position.x + m_translation.x + static_cast<float>(RandomNumber::Get(0,static_cast<int>(m_size.width)));
+		particle.dstRect.y = m_position.y + m_translation.y + static_cast<float>(RandomNumber::Get(0, static_cast<int>(m_size.width)));;
 		particle.dstRect.w = m_particleProps.size.x;
 		particle.dstRect.h = m_particleProps.size.y;
 
 		particle.velocity = m_particleProps.velocity;
-		particle.lifeTime = (m_particleProps.lifeTime+RandomNumber::Get(0,3)) ;
+		particle.lifeTime = (m_particleProps.lifeTime) ;
 		particle.lifeRemaining = particle.lifeTime;
 		particle.minTimetoChangeColor = m_particleProps.minTimetoChangeColor;
 		particle.startColor = startColor;
@@ -210,7 +212,8 @@ namespace BINDU
 			if (fadeOut)
 			{
 				if (lifeRemaining < (lifeTime * 0.40f))
-					startColor.a *= 0.99f;
+					startColor.a *= 0.94f;
+
 
 				if (startColor.a <= 0.f)
 					lifeRemaining = 0.f;

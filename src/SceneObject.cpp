@@ -3,43 +3,72 @@
 
 namespace BINDU
 {
+	void SceneObject::onLoadResource()
+	{
+		for (const auto& child : m_childs)
+			child->onLoadResource();
+	}
+
+	void SceneObject::onReleaseResource()
+	{
+		for (const auto& child : m_childs)
+			child->onReleaseResource();
+
+		m_childs.clear();
+	}
 
 	void SceneObject::UpdateWithChild(float dt)
 	{
 
-			m_collider.x = (m_position.x) ;
-			m_collider.y = (m_position.y) ;
-			m_collider.w = m_size.width ;
-			m_collider.h = m_size.height;
+		if (m_colliderType == ColliderType::RECT_COLLIDER)
+		{
+			m_rectCollider.x = (m_position.x + m_colliderOffsetRect.x);
+			m_rectCollider.y = (m_position.y + m_colliderOffsetRect.y);
+			m_rectCollider.w =  m_colliderOffsetRect.w;
+			m_rectCollider.h =  m_colliderOffsetRect.h;
+		}
+		else if(m_colliderType == ColliderType::CIRCLE_COLLIDER)
+		{
+			m_circleCollider.position = this->getCenter();
+			m_circleCollider.radius = (this->getHeight() / 2.f) - m_colliderOffsetRadius;
+		}
 		
 
 		Update(dt);
 
 		for(const auto& m: m_childs)
 		{
-			if (m->isActive())
+			if (m)
 			{
-				m->Update(dt);
+				if (m->isQueuedForDestroy())
+					RemoveChild(m->getGuid().c_str());
+				else if (m->isActive())
+				{
+					m->Update(dt);
+				}
 			}
+
 		}
 		
 	}
 
 	void SceneObject::DrawWithChild(Graphics* graphics, const D2D1_MATRIX_3X2_F& cameraMatrix)
 	{
-
-		Draw(graphics,cameraMatrix);
-		graphics->getRenderTarget()->SetTransform(D2D1::Matrix3x2F::Identity());
-
 		for (const auto& m : m_childs)
 		{
 			if (m->isActive())
 			{
 				m->setTranslation(m_position);
-				m->Draw(graphics,getTransform() * cameraMatrix);
+				m->UpdateTransform();
+				m->Draw(graphics, getTransform() * cameraMatrix);
 				graphics->getRenderTarget()->SetTransform(D2D1::Matrix3x2F::Identity());
 			}
 		}
+
+		UpdateTransform();
+		Draw(graphics, cameraMatrix);
+		graphics->getRenderTarget()->SetTransform(D2D1::Matrix3x2F::Identity());
+
 	}
 
 	void SceneObject::ProcessAllInput()
