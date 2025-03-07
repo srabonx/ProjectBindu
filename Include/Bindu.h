@@ -7,56 +7,15 @@
 #define _BINDU_H
 
 
-#include <iostream>
-#include <sstream>
-#include <fstream>
 #include <string>
 #include <windows.h>
-#include <d2d1.h>
-#include <d2d1_3.h>
-#include <d2d1_3helper.h>
-#include <d2d1helper.h>
-#include <d2d1_1helper.h>
-#include <d3d11.h>
-#include <d3d11_3.h>
-#include <dxgi1_4.h>
-#include <dxgidebug.h>
 #include <DirectXColors.h>
-#include <DirectXHelpers.h>
-#include <wincodec.h>
 #include <wrl.h>
-#include <memory>
-#include <map>
-#include <vector>
 
 #include "Graphics.h"
 #include "SceneObject.h"
 
 using namespace Microsoft::WRL;
-
-//#include "Range.h"
-//#include "Random.h"
-//#include "Graphics.h"
-//#include "constants.h"
-//#include "Game.h"
-//#include "Vector.h"
-//#include "TImer.h"
-//#include "Input.h"
-//#include "BitmapLoader.h"
-//#include "SceneObject.h"
-//#include "Layer.h"
-////#include "TileLayer.h"
-//#include "Scene.h"
-//#include "SceneManager.h"
-//#include "Drawable.h"
-//#include "Entity.h"
-//#include "Sprite.h"
-//#include "SpriteBatch.h"
-//#include "ParticleEmitter.h"
-//#include "Font.h"
-//#include "Camera.h"
-////#include "Animator.h"
-//#include "MapParser.h"
 
 #include "TImer.h"
 
@@ -65,7 +24,7 @@ using namespace Microsoft::WRL;
 
 #define VERSION_MAJOR 1
 #define VERSION_MINOR 0
-#define REVISION 0
+#define REVISION 2
 
 
 namespace BINDU {
@@ -125,12 +84,19 @@ namespace BINDU {
 		float						m_deltaTime;
 		DWORD						m_lastFrameTime;
 
+		float						m_updateTime{};
+		float						m_renderTime{};
+		float						m_updateTimeCount{};
+		float						m_renderTimeCount{};
+
 		// Input variables
 		bool						m_isDown;
 		bool						m_wasDown;
 		uint32_t					m_VKcode;
 
 		EnginePropertiesEx			m_enginePropertiesEx;
+
+		float						oneOverThousand{};
 
 	private:			// Core objects
 		Graphics*					o_graphics;
@@ -207,14 +173,19 @@ namespace BINDU {
 
 		inline int				getRealFrameRate() const { return m_frameRateReal; }
 
+		inline float			getUpdateTime() const { return m_updateTime; }			// get update time in ms.
+
+		inline float			getRenderTime() const { return m_renderTime; }			// get render time in ms.
+
 		inline void				setMaximizeProcessor(bool value) { m_enginePropertiesEx.maximizeProcessor = value; }
 
-		inline bool				isMaximizeProcessor() { return m_enginePropertiesEx.maximizeProcessor; }
+		inline bool				isMaximizeProcessor() const { return m_enginePropertiesEx.maximizeProcessor; }
 
 
 	}; // class
 }// namespace
-	extern BINDU::Engine* g_engine;
+
+	extern BINDU::Engine* g_engine;		// Global Engine instance.
 
 
 

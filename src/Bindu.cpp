@@ -1,5 +1,7 @@
 #include "Include/Bindu.h"
 
+#include <sstream>
+
 #include "Include/Input.h"
 
 namespace BINDU {
@@ -18,6 +20,8 @@ namespace BINDU {
 		m_frameRateCore = 0;
 		m_frameRateReal = 0;
 		m_deltaTime = 0;
+
+		oneOverThousand = 1.f / 1000.f;
 
 		m_lastFrameTime = GetTickCount();
 		errorType = N_ERR;
@@ -80,7 +84,7 @@ namespace BINDU {
 			}
 		}
 		else {
-			m_deltaTime = (GetTickCount() - m_lastFrameTime) / 1000.0f;		// Delta time
+			m_deltaTime = (GetTickCount() - m_lastFrameTime) * oneOverThousand;		// Delta time
 			m_lastFrameTime = GetTickCount();
 
 			// Count real framerate
@@ -88,6 +92,15 @@ namespace BINDU {
 			if (o_realTimer.stopwatch(999))
 			{
 				m_frameRateReal = m_frameCountReal;
+
+				const float dev = 1.f / m_frameCountReal;
+
+				m_updateTime = (m_updateTimeCount * oneOverThousand) * dev;
+				m_updateTimeCount = 0.0f;
+
+				m_renderTime = (m_renderTimeCount * oneOverThousand) * dev;
+				m_renderTimeCount = 0.0f;
+
 				m_frameCountReal = 0;
 			}
 			// Process inputs
@@ -95,16 +108,27 @@ namespace BINDU {
 			game_processInputs();
 
 			// Update game logic
+			{
+				const DWORD befTime = GetTickCount();
 
-			game_update(m_deltaTime);
+				game_update(m_deltaTime);
+
+				m_updateTimeCount += GetTickCount() - befTime;
+			}
 
 			// Drawing/ Rendering
 
-			o_graphics->Clear();
+			{
+				const DWORD befTime = GetTickCount();
 
-			game_render2d(o_graphics);
+				o_graphics->Clear();
 
-			o_graphics->Present();
+				game_render2d(o_graphics);
+
+				o_graphics->Present();
+
+				m_renderTimeCount += GetTickCount() - befTime;
+			}
 		}
 		return true;
 	}

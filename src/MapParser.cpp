@@ -5,6 +5,8 @@
 #include <sstream>
 #include <memory>
 
+#include "Include/HelperMethods.h"
+
 namespace BINDU
 {
 
@@ -71,7 +73,28 @@ namespace BINDU
 		{
 			if (std::strcmp(e->Value(), "image") == 0)
 			{
-				tileSet->source = m_resourcePath + e->Attribute("source");
+				tileSet->source = e->Attribute("source");
+
+				// Trim the source of leading non alphabet/digit characters
+
+				int trimCount{ 0 };
+
+				for (char i : tileSet->source)
+				{
+					if (std::isalpha(i) || std::isdigit(i))
+						break;
+
+					trimCount++;
+				}
+
+				tileSet->source = tileSet->source.substr(trimCount);
+
+				tileSet->source = m_resourcePath + tileSet->source;
+
+				std::filesystem::path sourcePath(tileSet->source);
+
+				tileSet->source = sourcePath.make_preferred().string();
+
 			}
 			if (std::strcmp(e->Value(), "tile") == 0)
 			{
